@@ -7,11 +7,20 @@ class HomeView: UIView {
         let label = UILabel()
 
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Bem-vindo ao Prisma"
+        label.text = "Todas as Aesthetics e TAGs"
         label.font = UIFont.boldSystemFont(ofSize: 24)
         label.textColor = .black
 
         return label
+    }()
+
+    private(set) lazy var aestheticCardView: AestheticCardView = {
+        let view = AestheticCardView()
+
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.configure(with: AestheticModel(name: "Nostalgia", image: "bk"))
+
+        return view
     }()
 
     // MARK: - Initializers
@@ -30,12 +39,18 @@ class HomeView: UIView {
 
     func setupSubViews() {
         addSubview(label)
+        addSubview(aestheticCardView)
     }
 
     func setupConstraints() {
         NSLayoutConstraint.activate([
-            label.centerXAnchor.constraint(equalTo: centerXAnchor),
-            label.centerYAnchor.constraint(equalTo: centerYAnchor),
+            label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+            label.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 16),
+
+            aestheticCardView.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 16),
+            aestheticCardView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+            aestheticCardView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+            aestheticCardView.heightAnchor.constraint(equalToConstant: 200),
         ])
     }
 }
