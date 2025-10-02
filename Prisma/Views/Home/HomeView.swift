@@ -2,6 +2,9 @@ import UIKit
 
 class HomeView: UIView {
 
+    // MARK: - Properties
+    var onAestheticButtonTapped: (() -> Void) = {}
+
     // MARK: - Subviews
     private(set) lazy var label: UILabel = {
         let label = UILabel()
@@ -18,7 +21,15 @@ class HomeView: UIView {
         let view = AestheticCardView()
 
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.configure(with: AestheticModel(name: "Nostalgia", image: "bk"))
+        view.configure(
+            with: AestheticModel(
+                name: "Nostalgia", image: "bk",
+                description:
+                    "Aesthetic que remete a sentimentos de nostalgia e memórias do passado.",
+                allReferences: [
+                    ImageModel.placeholder, ImageModel.placeholder, ImageModel.placeholder,
+                ]))
+        view.addTarget(self, action: #selector(aestheticButtonTapped), for: .touchUpInside)
 
         return view
     }()
@@ -52,5 +63,11 @@ class HomeView: UIView {
             aestheticCardView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
             aestheticCardView.heightAnchor.constraint(equalToConstant: 200),
         ])
+    }
+
+    // MARK: - Actions
+    @objc
+    func aestheticButtonTapped() {
+        onAestheticButtonTapped()
     }
 }

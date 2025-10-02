@@ -9,9 +9,19 @@ class HomeViewController: UIViewController {
     override func loadView() {
         super.loadView()
         self.view = homeView
+
+        homeView.onAestheticButtonTapped = { [weak self] in
+            self?.navigateToGalleryView()
+        }
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
+    }
+
+    // MARK: - Functions
+    func navigateToGalleryView() {
+        let galleryVC = GalleryViewController()
+        navigationController?.pushViewController(galleryVC, animated: true)
     }
 }

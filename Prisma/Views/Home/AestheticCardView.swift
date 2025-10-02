@@ -2,7 +2,18 @@ import UIKit
 
 class AestheticCardView: UIControl {
     // MARK: - Properties
-    private var aestheticModel: AestheticModel = AestheticModel(name: "", image: "")
+    private var aestheticModel: AestheticModel = AestheticModel(
+        name: "", image: "", description: "", allReferences: []
+    )
+
+    // MARK: - Overrides properties
+    override var isHighlighted: Bool {
+        didSet {
+            if isHighlighted {
+                animateOnTouchDown()
+            }
+        }
+    }
 
     // MARK: - Subviews
     private(set) var backgroundImage: UIImageView = {
@@ -22,6 +33,8 @@ class AestheticCardView: UIControl {
         stackView.spacing = -4
         stackView.alignment = .center
         stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.isUserInteractionEnabled = false
+
         return stackView
     }()
 
@@ -49,8 +62,6 @@ class AestheticCardView: UIControl {
     // MARK: - Initializers
     override init(frame: CGRect) {
         super.init(frame: frame)
-
-        backgroundColor = .lightGray
 
         setupSubViews()
         setupConstraints()
@@ -89,5 +100,16 @@ class AestheticCardView: UIControl {
             contentStack.centerXAnchor.constraint(equalTo: centerXAnchor),
             contentStack.centerYAnchor.constraint(equalTo: centerYAnchor),
         ])
+    }
+
+    // MARK - Functions
+    func animateOnTouchDown() {
+        UIView.animate(withDuration: 0.1, delay: 0, options: .curveEaseOut) {
+            self.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
+        } completion: { _ in
+            UIView.animate(withDuration: 0.1) {
+                self.transform = .identity
+            }
+        }
     }
 }
