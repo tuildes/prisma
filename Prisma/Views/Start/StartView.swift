@@ -58,6 +58,8 @@ class StartView: UIView {
         NSLayoutConstraint.activate([
             logoImage.centerXAnchor.constraint(equalTo: centerXAnchor),
             logoImage.centerYAnchor.constraint(equalTo: centerYAnchor),
+            logoImage.widthAnchor.constraint(equalToConstant: 200),
+            logoImage.heightAnchor.constraint(equalToConstant: 200),
 
             button.topAnchor.constraint(equalTo: logoImage.bottomAnchor, constant: 20),
             button.centerXAnchor.constraint(equalTo: centerXAnchor),

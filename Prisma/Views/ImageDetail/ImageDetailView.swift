@@ -39,8 +39,6 @@ class ImageDetailView: UIView {
     // MARK: - Properties
     var imageModel: ImageModel = ImageModel.placeholder
     private let paddingBackground: CGFloat = 2
-    private let cornerRadiusBackground =
-        UIScreen.main.value(forKey: "_displayCornerRadius") as? CGFloat ?? 0
 
     // MARK: - Initializers
     override init(frame: CGRect) {
@@ -51,7 +49,6 @@ class ImageDetailView: UIView {
         backgroundImageView.image = UIImage(named: imageModel.imageURL)
         titleLabel.text = imageModel.title
         authorLabel.text = "By: \(imageModel.author)"
-        backgroundImageView.layer.cornerRadius = cornerRadiusBackground
 
         setupSubViews()
         setupConstraints()

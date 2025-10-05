@@ -6,6 +6,12 @@ class HomeView: UIView {
     var onAestheticButtonTapped: (() -> Void) = {}
 
     // MARK: - Subviews
+    private(set) lazy var headerView: HeaderView = {
+        let view = HeaderView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+
     private(set) lazy var label: UILabel = {
         let label = UILabel()
 
@@ -49,12 +55,17 @@ class HomeView: UIView {
     }
 
     func setupSubViews() {
+        addSubview(headerView)
         addSubview(label)
         addSubview(aestheticCardView)
     }
 
     func setupConstraints() {
         NSLayoutConstraint.activate([
+            headerView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            headerView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            headerView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+
             label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             label.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 16),
 
