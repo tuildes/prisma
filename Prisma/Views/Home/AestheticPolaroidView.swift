@@ -1,10 +1,9 @@
 import UIKit
 
-class AestheticCardView: UIControl {
+class AestheticPolaroidView: UIControl {
     // MARK: - Properties
-    private var aestheticModel: AestheticModel = AestheticModel(
-        name: "", image: "", description: "", allReferences: []
-    )
+    private var padding: CGFloat = 12
+    private var aestheticModel: AestheticModel = .placeholder
 
     // MARK: - Overrides properties
     override var isHighlighted: Bool {
@@ -21,29 +20,41 @@ class AestheticCardView: UIControl {
 
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFill
+        imageView.image = UIImage(named: "paper_texture")
         imageView.clipsToBounds = true
-        imageView.layer.cornerRadius = 12
 
         return imageView
     }()
 
     private(set) var contentStack: UIStackView = {
         let stackView = UIStackView()
+
         stackView.axis = .vertical
-        stackView.spacing = -4
-        stackView.alignment = .center
+        stackView.spacing = -12
+        stackView.alignment = .trailing
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.isUserInteractionEnabled = false
 
         return stackView
     }()
 
+    private(set) var imageView: UIImageView = {
+        let imageView = UIImageView()
+
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+        imageView.layer.cornerRadius = 4
+
+        return imageView
+    }()
+
     private(set) lazy var titleName: UILabel = {
         let label = UILabel()
 
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.boldSystemFont(ofSize: 36)
-        label.textColor = .white
+        label.font = UIFont(name: "Staatliches", size: 48)
+        label.textColor = .prismaText
 
         return label
     }()
@@ -52,9 +63,8 @@ class AestheticCardView: UIControl {
         let label = UILabel()
 
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.systemFont(ofSize: 14)
-        label.textColor = .white
-        label.alpha = 0.75
+        label.font = UIFont(name: "Staatliches", size: 20)
+        label.textColor = .prismaText
 
         return label
     }()
@@ -62,6 +72,14 @@ class AestheticCardView: UIControl {
     // MARK: - Initializers
     override init(frame: CGRect) {
         super.init(frame: frame)
+
+        layer.cornerRadius = 8
+
+        layer.shadowColor = UIColor.black.cgColor
+        layer.shadowOpacity = 0.3
+        layer.shadowOffset = CGSize(width: 2, height: 2)
+        layer.shadowRadius = 2
+        layer.masksToBounds = false
 
         setupSubViews()
         setupConstraints()
@@ -74,13 +92,15 @@ class AestheticCardView: UIControl {
     func configure(with model: AestheticModel) {
         self.aestheticModel = model
         titleName.text = model.name
-        backgroundImage.image = UIImage(named: model.image)
-        totalReferencesLabel.text = "\(model.totalReferences) referências"
+        imageView.image = UIImage(named: model.image)
+        totalReferencesLabel.text = "\(model.totalReferences) references"
     }
 
     func setupSubViews() {
         addSubview(backgroundImage)
         addSubview(contentStack)
+        addSubview(imageView)
+
         contentStack.addArrangedSubview(titleName)
         contentStack.addArrangedSubview(totalReferencesLabel)
     }
@@ -97,19 +117,18 @@ class AestheticCardView: UIControl {
             backgroundImage.trailingAnchor.constraint(equalTo: trailingAnchor),
             backgroundImage.bottomAnchor.constraint(equalTo: bottomAnchor),
 
-            contentStack.centerXAnchor.constraint(equalTo: centerXAnchor),
-            contentStack.centerYAnchor.constraint(equalTo: centerYAnchor),
+            imageView.topAnchor.constraint(equalTo: topAnchor, constant: padding),
+            imageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: padding),
+            imageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -padding),
+            imageView.heightAnchor.constraint(equalTo: widthAnchor, multiplier: 1),
+
+            contentStack.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 8),
+            contentStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -padding),
         ])
     }
 
     // MARK - Functions
     func animateOnTouchDown() {
-        UIView.animate(withDuration: 0.1, delay: 0, options: .curveEaseOut) {
-            self.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
-        } completion: { _ in
-            UIView.animate(withDuration: 0.1) {
-                self.transform = .identity
-            }
-        }
+        // TODO: Add animation
     }
 }

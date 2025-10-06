@@ -12,30 +12,53 @@ class HomeView: UIView {
         return view
     }()
 
-    private(set) lazy var label: UILabel = {
-        let label = UILabel()
+    private(set) lazy var stackView: UIStackView = {
+        let stack = UIStackView()
 
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Todas as Aesthetics e TAGs"
-        label.font = UIFont.boldSystemFont(ofSize: 24)
-        label.textColor = .black
+        stack.axis = .vertical
+        stack.spacing = 60
+        stack.translatesAutoresizingMaskIntoConstraints = false
 
-        return label
+        return stack
     }()
 
-    private(set) lazy var aestheticCardView: AestheticCardView = {
-        let view = AestheticCardView()
+    private(set) lazy var firstPolaroidView: AestheticPolaroidView = {
+        let view = AestheticPolaroidView()
 
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.configure(
-            with: AestheticModel(
-                name: "Nostalgia", image: "bk",
-                description:
-                    "Aesthetic que remete a sentimentos de nostalgia e memórias do passado.",
-                allReferences: [
-                    ImageModel.placeholder, ImageModel.placeholder, ImageModel.placeholder,
-                ]))
+        view.configure(with: .placeholder)
         view.addTarget(self, action: #selector(aestheticButtonTapped), for: .touchUpInside)
+
+        view.transform = CGAffineTransform(rotationAngle: .pi / 40)
+
+        return view
+    }()
+
+    private(set) lazy var secondPolaroidView: AestheticPolaroidView = {
+        let view = AestheticPolaroidView()
+
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.configure(with: .placeholder)
+        view.addTarget(self, action: #selector(aestheticButtonTapped), for: .touchUpInside)
+
+        return view
+    }()
+
+    private(set) lazy var selectSection: SelectAestheticView = {
+        let view = SelectAestheticView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+
+        view.onNextButtonAction = { [weak self] in
+            self?.onNextTapped()
+        }
+        view.onPreviousButtonAction = { [weak self] in
+            self?.onPreviousTapped()
+        }
+        view.onSelectButtonAction = { [weak self] in
+            self?.onSelectTapped()
+        }
+
+        view.previousButton.layer.opacity = 0.5
 
         return view
     }()
@@ -44,7 +67,7 @@ class HomeView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
 
-        backgroundColor = .white
+        backgroundColor = .prismaBackground
 
         setupSubViews()
         setupConstraints()
@@ -56,8 +79,11 @@ class HomeView: UIView {
 
     func setupSubViews() {
         addSubview(headerView)
-        addSubview(label)
-        addSubview(aestheticCardView)
+        addSubview(stackView)
+
+        stackView.addArrangedSubview(secondPolaroidView)
+        secondPolaroidView.addSubview(firstPolaroidView)
+        stackView.addArrangedSubview(selectSection)
     }
 
     func setupConstraints() {
@@ -66,13 +92,22 @@ class HomeView: UIView {
             headerView.trailingAnchor.constraint(equalTo: trailingAnchor),
             headerView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
 
-            label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-            label.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 16),
+            stackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+            stackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+            stackView.centerYAnchor.constraint(equalTo: centerYAnchor),
 
-            aestheticCardView.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 16),
-            aestheticCardView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-            aestheticCardView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
-            aestheticCardView.heightAnchor.constraint(equalToConstant: 200),
+            firstPolaroidView.widthAnchor.constraint(
+                equalTo: stackView.widthAnchor, multiplier: 0.9),
+            firstPolaroidView.heightAnchor.constraint(
+                equalTo: firstPolaroidView.widthAnchor, multiplier: 1.4),
+            firstPolaroidView.centerXAnchor.constraint(equalTo: centerXAnchor),
+
+            secondPolaroidView.widthAnchor.constraint(
+                equalTo: stackView.widthAnchor, multiplier: 0.9),
+            secondPolaroidView.heightAnchor.constraint(
+                equalTo: secondPolaroidView.widthAnchor, multiplier: 1.4),
+            secondPolaroidView.centerXAnchor.constraint(equalTo: centerXAnchor),
+
         ])
     }
 
@@ -80,5 +115,17 @@ class HomeView: UIView {
     @objc
     func aestheticButtonTapped() {
         onAestheticButtonTapped()
+    }
+
+    func onNextTapped() {
+        print("Next button tapped")
+    }
+
+    func onPreviousTapped() {
+        print("Previous button tapped")
+    }
+
+    func onSelectTapped() {
+        print("Select button tapped")
     }
 }

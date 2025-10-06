@@ -5,7 +5,7 @@ class GalleryView: UIView {
     // MARK: - Properties
     var onImageCardTapped: (() -> Void) = {}
     let aesthetic = AestheticModel(
-        name: "Nostalgia", image: "bk", description: "...",
+        name: "Nostalgia", image: "bk",
         allReferences: [.placeholder, .placeholder, .placeholder]
     )
 

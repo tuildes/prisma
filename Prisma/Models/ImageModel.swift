@@ -18,7 +18,7 @@ struct ImageModel: Identifiable {
 
 extension ImageModel {
     static let placeholder = ImageModel(
-        title: "Placeholder Image",
+        title: "Image",
         author: "Unknown",
         imageURL: "bk"
     )
