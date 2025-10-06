@@ -3,7 +3,9 @@ import UIKit
 class GalleryView: UIView {
 
     // MARK: - Properties
-    var onImageCardTapped: (() -> Void) = {}
+    private lazy var waveMaskLayer = CAShapeLayer()
+    var onFilterTapped: ((ImageType?) -> Void)?
+    private var filterButtons: [UIButton] = []
     var aesthetic: AestheticModel? {
         didSet {
             setupUI()
@@ -11,6 +13,31 @@ class GalleryView: UIView {
     }
 
     // MARK: - Subviews
+    private(set) lazy var emptyStateLabel: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(named: "blank")
+        return imageView
+    }()
+
+    private(set) lazy var collectionView: UICollectionView = {
+        let spacing: CGFloat = 4
+        let itemWidth = (UIScreen.main.bounds.width / 2) - (spacing * 3)
+        let layout = UICollectionViewFlowLayout()
+
+        layout.scrollDirection = .vertical
+        layout.minimumLineSpacing = 8
+        layout.minimumInteritemSpacing = spacing
+        layout.itemSize = CGSize(width: itemWidth, height: itemWidth)
+
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.backgroundColor = .clear
+
+        return collectionView
+    }()
+
     private(set) lazy var bannerBackground: UIImageView = {
         let imageView = UIImageView()
 
@@ -65,18 +92,6 @@ class GalleryView: UIView {
         return label
     }()
 
-    private(set) lazy var imageCard: ImageCardView = {
-        let card = ImageCardView()
-
-        card.translatesAutoresizingMaskIntoConstraints = false
-        card.configure(with: aesthetic?.allReferences.first ?? .placeholder)
-        card.addTarget(self, action: #selector(imageCardTapped), for: .touchUpInside)
-
-        return card
-    }()
-
-    // TODO: TAGS/CHIPS
-
     // MARK: - Initializers
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -91,19 +106,24 @@ class GalleryView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        applyWaveMask()
+    }
+
     func setupUI() {
         guard let aesthetic else { return }
 
         titleLabel.text = aesthetic.name
         bannerBackground.image = UIImage(named: aesthetic.image)
         totalReferences.text = "\(aesthetic.allReferences.count) references"
-        imageCard.configure(with: aesthetic.allReferences.first ?? .placeholder)
     }
 
     func setupSubViews() {
-        addSubview(imageCard)
         addSubview(bannerBackground)
         addSubview(stackOverlay)
+        addSubview(collectionView)
+        addSubview(emptyStateLabel)
 
         stackOverlay.addArrangedSubview(titleLabel)
         stackOverlay.addArrangedSubview(totalReferences)
@@ -119,16 +139,59 @@ class GalleryView: UIView {
             stackOverlay.centerXAnchor.constraint(equalTo: bannerBackground.centerXAnchor),
             stackOverlay.centerYAnchor.constraint(equalTo: bannerBackground.centerYAnchor),
 
-            imageCard.topAnchor.constraint(equalTo: bannerBackground.bottomAnchor, constant: 16),
-            imageCard.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-            imageCard.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
-            imageCard.heightAnchor.constraint(equalToConstant: 360),
+            collectionView.topAnchor.constraint(
+                equalTo: bannerBackground.bottomAnchor, constant: 8),
+            collectionView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
+            collectionView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
+            collectionView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8),
+
+            emptyStateLabel.centerXAnchor.constraint(equalTo: collectionView.centerXAnchor),
+            emptyStateLabel.centerYAnchor.constraint(equalTo: collectionView.centerYAnchor),
+            emptyStateLabel.leadingAnchor.constraint(
+                equalTo: collectionView.leadingAnchor, constant: 16),
+            emptyStateLabel.trailingAnchor.constraint(
+                equalTo: collectionView.trailingAnchor, constant: -16),
+            emptyStateLabel.heightAnchor.constraint(equalToConstant: 360),
+            emptyStateLabel.widthAnchor.constraint(equalToConstant: 360),
         ])
     }
 
-    // MARK: - Actions
-    @objc
-    func imageCardTapped() {
-        onImageCardTapped()
+    // MARK: - Action
+    func showEmptyState(message: String) {
+        emptyStateLabel.isHidden = false
+        collectionView.isHidden = true
     }
+
+    func hideEmptyState() {
+        emptyStateLabel.isHidden = true
+        collectionView.isHidden = false
+    }
+
+    private func applyWaveMask() {
+        bannerBackground.layer.mask = waveMaskLayer
+
+        let path = UIBezierPath()
+        let width = bannerBackground.bounds.width
+        let height = bannerBackground.bounds.height
+        let waveHeight: CGFloat = 14
+
+        path.move(to: .zero)
+        path.addLine(to: CGPoint(x: width, y: 0))
+        path.addLine(to: CGPoint(x: width, y: height - waveHeight))
+
+        path.addQuadCurve(
+            to: CGPoint(x: width / 2, y: height - waveHeight),
+            controlPoint: CGPoint(x: width * 0.75, y: height)
+        )
+
+        path.addQuadCurve(
+            to: CGPoint(x: 0, y: height),
+            controlPoint: CGPoint(x: width * 0.25, y: height - (waveHeight * 2))  // Ponto de controle para cima
+        )
+
+        path.close()
+
+        waveMaskLayer.path = path.cgPath
+    }
+
 }
