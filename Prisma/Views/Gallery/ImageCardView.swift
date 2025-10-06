@@ -14,13 +14,25 @@ class ImageCardView: UIControl {
     }
 
     // MARK: - Subviews
+    private(set) var backgroundImage: UIImageView = {
+        let imageView = UIImageView()
+
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFill
+        imageView.image = UIImage(named: "paper_texture")
+        imageView.clipsToBounds = true
+        imageView.layer.cornerRadius = 8
+
+        return imageView
+    }()
+
     private(set) var referenceImage: UIImageView = {
         let imageView = UIImageView()
 
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
-        imageView.layer.cornerRadius = 12
+        imageView.layer.cornerRadius = 4
 
         return imageView
     }()
@@ -42,7 +54,7 @@ class ImageCardView: UIControl {
 
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.boldSystemFont(ofSize: 24)
-        label.textColor = .white
+        label.textColor = .prismaText
 
         return label
     }()
@@ -51,8 +63,8 @@ class ImageCardView: UIControl {
         let label = UILabel()
 
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.systemFont(ofSize: 20)
-        label.textColor = .white
+        label.font = UIFont.systemFont(ofSize: 16)
+        label.textColor = .prismaText
         label.alpha = 0.5
 
         return label
@@ -62,8 +74,11 @@ class ImageCardView: UIControl {
     override init(frame: CGRect) {
         super.init(frame: frame)
 
-        backgroundColor = .black
-        layer.cornerRadius = 12
+        layer.shadowColor = UIColor.black.cgColor
+        layer.shadowOpacity = 0.3
+        layer.shadowOffset = CGSize(width: 2, height: 2)
+        layer.shadowRadius = 2
+        layer.masksToBounds = false
 
         setupSubViews()
         setupConstraints()
@@ -82,6 +97,7 @@ class ImageCardView: UIControl {
     }
 
     func setupSubViews() {
+        addSubview(backgroundImage)
         addSubview(referenceImage)
         addSubview(contentStack)
 
@@ -91,15 +107,19 @@ class ImageCardView: UIControl {
 
     func setupConstraints() {
         NSLayoutConstraint.activate([
-            self.heightAnchor.constraint(equalTo: heightAnchor),
             self.widthAnchor.constraint(equalTo: widthAnchor),
             self.centerXAnchor.constraint(equalTo: centerXAnchor),
             self.centerYAnchor.constraint(equalTo: centerYAnchor),
 
+            backgroundImage.topAnchor.constraint(equalTo: topAnchor),
+            backgroundImage.leadingAnchor.constraint(equalTo: leadingAnchor),
+            backgroundImage.trailingAnchor.constraint(equalTo: trailingAnchor),
+            backgroundImage.bottomAnchor.constraint(equalTo: bottomAnchor),
+
             referenceImage.topAnchor.constraint(equalTo: topAnchor, constant: 8),
             referenceImage.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
             referenceImage.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
-            referenceImage.bottomAnchor.constraint(equalTo: contentStack.topAnchor, constant: -12),
+            referenceImage.bottomAnchor.constraint(equalTo: contentStack.topAnchor, constant: -8),
 
             contentStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
             contentStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),

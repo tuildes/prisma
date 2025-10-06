@@ -39,7 +39,7 @@ class StartView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
 
-        backgroundColor = .white
+        backgroundColor = .prismaBackground
 
         setupSubViews()
         setupConstraints()
@@ -52,6 +52,7 @@ class StartView: UIView {
     func setupSubViews() {
         addSubview(logoImage)
         addSubview(button)
+
     }
 
     func setupConstraints() {

@@ -4,12 +4,16 @@ class GalleryViewController: UIViewController {
 
     // MARK: - Properties
     private let galleryView: GalleryView = GalleryView()
+    var aesthetic: AestheticModel = .placeholder
 
     // MARK: - Lifecycle
     override func loadView() {
         super.loadView()
+
+        galleryView.aesthetic = aesthetic
+        galleryView.onImageCardTapped = navigateToImageDetail
+
         self.view = galleryView
-        self.galleryView.onImageCardTapped = navigateToImageDetail
     }
 
     override func viewDidLoad() {

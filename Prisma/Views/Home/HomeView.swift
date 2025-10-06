@@ -3,7 +3,14 @@ import UIKit
 class HomeView: UIView {
 
     // MARK: - Properties
-    var onAestheticButtonTapped: (() -> Void) = {}
+    var onAestheticButtonTapped: () -> Void = {}
+    var _onNextTapped: () -> Void = {}
+    var _onPreviousTapped: () -> Void = {}
+
+    private var polaroidViews: [AestheticPolaroidView] = []
+
+    private let topCardTransform = CGAffineTransform(rotationAngle: .pi / 40)
+    private let bottomCardTransform = CGAffineTransform.identity  // Sem rotação ou escala
 
     // MARK: - Subviews
     private(set) lazy var headerView: HeaderView = {
@@ -12,65 +19,39 @@ class HomeView: UIView {
         return view
     }()
 
-    private(set) lazy var stackView: UIStackView = {
-        let stack = UIStackView()
-
-        stack.axis = .vertical
-        stack.spacing = 60
-        stack.translatesAutoresizingMaskIntoConstraints = false
-
-        return stack
+    private(set) lazy var polaroidContainerView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }()
 
     private(set) lazy var firstPolaroidView: AestheticPolaroidView = {
         let view = AestheticPolaroidView()
-
         view.translatesAutoresizingMaskIntoConstraints = false
         view.configure(with: .placeholder)
         view.addTarget(self, action: #selector(aestheticButtonTapped), for: .touchUpInside)
-
-        view.transform = CGAffineTransform(rotationAngle: .pi / 40)
-
+        // A transformação inicial é definida aqui
+        view.transform = topCardTransform
         return view
     }()
 
     private(set) lazy var secondPolaroidView: AestheticPolaroidView = {
         let view = AestheticPolaroidView()
-
         view.translatesAutoresizingMaskIntoConstraints = false
         view.configure(with: .placeholder)
         view.addTarget(self, action: #selector(aestheticButtonTapped), for: .touchUpInside)
-
-        return view
-    }()
-
-    private(set) lazy var selectSection: SelectAestheticView = {
-        let view = SelectAestheticView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-
-        view.onNextButtonAction = { [weak self] in
-            self?.onNextTapped()
-        }
-        view.onPreviousButtonAction = { [weak self] in
-            self?.onPreviousTapped()
-        }
-        view.onSelectButtonAction = { [weak self] in
-            self?.onSelectTapped()
-        }
-
-        view.previousButton.layer.opacity = 0.5
-
+        view.transform = bottomCardTransform
         return view
     }()
 
     // MARK: - Initializers
     override init(frame: CGRect) {
         super.init(frame: frame)
-
         backgroundColor = .prismaBackground
 
         setupSubViews()
         setupConstraints()
+        setupGestures()
     }
 
     required init?(coder: NSCoder) {
@@ -79,11 +60,12 @@ class HomeView: UIView {
 
     func setupSubViews() {
         addSubview(headerView)
-        addSubview(stackView)
+        addSubview(polaroidContainerView)
 
-        stackView.addArrangedSubview(secondPolaroidView)
-        secondPolaroidView.addSubview(firstPolaroidView)
-        stackView.addArrangedSubview(selectSection)
+        polaroidContainerView.addSubview(secondPolaroidView)
+        polaroidContainerView.addSubview(firstPolaroidView)
+
+        polaroidViews = [firstPolaroidView, secondPolaroidView]
     }
 
     func setupConstraints() {
@@ -92,23 +74,75 @@ class HomeView: UIView {
             headerView.trailingAnchor.constraint(equalTo: trailingAnchor),
             headerView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
 
-            stackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-            stackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
-            stackView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            polaroidContainerView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+            polaroidContainerView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+            polaroidContainerView.centerYAnchor.constraint(equalTo: centerYAnchor),
 
-            firstPolaroidView.widthAnchor.constraint(
-                equalTo: stackView.widthAnchor, multiplier: 0.9),
-            firstPolaroidView.heightAnchor.constraint(
-                equalTo: firstPolaroidView.widthAnchor, multiplier: 1.4),
-            firstPolaroidView.centerXAnchor.constraint(equalTo: centerXAnchor),
-
-            secondPolaroidView.widthAnchor.constraint(
-                equalTo: stackView.widthAnchor, multiplier: 0.9),
-            secondPolaroidView.heightAnchor.constraint(
-                equalTo: secondPolaroidView.widthAnchor, multiplier: 1.4),
-            secondPolaroidView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            polaroidContainerView.heightAnchor.constraint(
+                equalTo: polaroidContainerView.widthAnchor, multiplier: 1.5),
 
         ])
+
+        [firstPolaroidView, secondPolaroidView].forEach { card in
+            NSLayoutConstraint.activate([
+                card.widthAnchor.constraint(
+                    equalTo: polaroidContainerView.widthAnchor, multiplier: 0.9),
+                card.heightAnchor.constraint(equalTo: card.widthAnchor, multiplier: 1.4),
+                card.centerXAnchor.constraint(equalTo: polaroidContainerView.centerXAnchor),
+                card.centerYAnchor.constraint(equalTo: polaroidContainerView.centerYAnchor),
+            ])
+        }
+    }
+
+    // MARK: - Gestures
+    private func setupGestures() {
+        let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipe(_:)))
+        swipeRight.direction = .right
+        polaroidContainerView.addGestureRecognizer(swipeRight)
+    }
+
+    @objc private func handleSwipe(_ sender: UISwipeGestureRecognizer) {
+        guard polaroidViews.count > 1 else { return }
+
+        if sender.direction == .right {
+            handleNext()
+        }
+    }
+
+    private func handleNext() {
+        // Identificacao dos polaroids
+        guard let topCard = polaroidViews.first else { return }
+        let nextCard = polaroidViews[1]
+
+        UIView.animate(
+            withDuration: 0.6, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.1,
+            options: .curveEaseInOut,
+            animations: {
+
+                // Jogar o polaroid para fora da tela
+                let translation = CGAffineTransform(translationX: self.bounds.width + 10, y: 40)
+                let rotation = CGAffineTransform(rotationAngle: .pi / 16)
+                topCard.transform = translation.concatenating(rotation)
+
+                // Trazer o proximo polaroid para a posicao do topo
+                nextCard.transform = self.topCardTransform
+            },
+            completion: { _ in
+                self.polaroidContainerView.sendSubviewToBack(topCard)
+
+                // Polaroid de tras iniciar invisivel
+                topCard.alpha = 0
+                topCard.transform = self.bottomCardTransform
+
+                let swipedCard = self.polaroidViews.removeFirst()
+                self.polaroidViews.append(swipedCard)
+                self._onNextTapped()
+
+                // Criar o card atrás
+                UIView.animate(withDuration: 0.2) {
+                    topCard.alpha = 1
+                }
+            })
     }
 
     // MARK: - Actions
@@ -117,15 +151,15 @@ class HomeView: UIView {
         onAestheticButtonTapped()
     }
 
+    @objc
     func onNextTapped() {
-        print("Next button tapped")
+        handleNext()
     }
 
-    func onPreviousTapped() {
-        print("Previous button tapped")
-    }
+    public func configureCards(topAesthetic: AestheticModel, bottomAesthetic: AestheticModel) {
+        guard polaroidViews.count >= 2 else { return }
 
-    func onSelectTapped() {
-        print("Select button tapped")
+        polaroidViews[0].configure(with: topAesthetic)
+        polaroidViews[1].configure(with: bottomAesthetic)
     }
 }

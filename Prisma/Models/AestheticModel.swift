@@ -24,6 +24,41 @@ extension AestheticModel {
         allReferences: [ImageModel.placeholder, ImageModel.placeholder, ImageModel.placeholder])
 
     static let sampleData: [AestheticModel] = [
-        .placeholder, .placeholder, .placeholder, .placeholder, .placeholder, .placeholder,
+        AestheticModel(
+            name: "Nostalgia",
+            image: "nostalgia",
+            allReferences: [
+                ImageModel.placeholder,
+                ImageModel.placeholder,
+                ImageModel.placeholder,
+                ImageModel.placeholder,
+                ImageModel.placeholder,
+                ImageModel.placeholder,
+            ]
+        ),
+        AestheticModel(
+            name: "Anime",
+            image: "nostalgia",
+            allReferences: [
+                ImageModel.placeholder,
+                ImageModel.placeholder,
+                ImageModel.placeholder,
+                ImageModel.placeholder,
+                ImageModel.placeholder,
+                ImageModel.placeholder,
+            ]
+        ),
+        AestheticModel(
+            name: "Teste",
+            image: "nostalgia",
+            allReferences: [
+                ImageModel.placeholder,
+                ImageModel.placeholder,
+                ImageModel.placeholder,
+                ImageModel.placeholder,
+                ImageModel.placeholder,
+                ImageModel.placeholder,
+            ]
+        ),
     ]
 }
