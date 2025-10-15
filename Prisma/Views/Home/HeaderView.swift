@@ -5,8 +5,6 @@ class HeaderView: UIView {
     private let padding: CGFloat = 16
     var onCreationButtonAction: (() -> Void) = {}
 
-    // MARK: - Overrides properties
-
     // MARK: - Subviews
     private(set) lazy var titleLabel: UILabel = {
         let label = UILabel()
@@ -33,6 +31,7 @@ class HeaderView: UIView {
         button.backgroundColor = .prismaText
         button.layer.cornerRadius = 4
         button.addTarget(self, action: #selector(creationButtonTapped), for: .touchUpInside)
+        button.layer.opacity = 0.2
 
         return button
     }()

@@ -12,8 +12,8 @@
 	"argv": [
 		"/opt/homebrew/bin/xcode-build-server"
 	],
-	"workspace": "/Users/tuildes/Developer/prisma/Prisma.xcodeproj/project.xcworkspace",
-	"build_root": "/Users/tuildes/Library/Developer/Xcode/DerivedData/Prisma-gevxgctmpqysnufwxchsnpmgeanr",
+	"workspace": "/Users/tuildes/Developer/2025-10 Prisma/Prisma.xcodeproj/project.xcworkspace",
+	"build_root": "/Users/tuildes/Library/Developer/Xcode/DerivedData/Prisma-fdeclswdubwrjreberyaztejiyjx",
 	"scheme": "Prisma",
 	"kind": "xcode"
 }

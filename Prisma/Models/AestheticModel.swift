@@ -23,6 +23,8 @@ extension AestheticModel {
         name: "Placeholder", image: "nostalgia",
         allReferences: [ImageModel.placeholder, ImageModel.placeholder, ImageModel.placeholder])
 
+    // Dados usado para a apresentacao
+    // Como não há backend, os dados estão hardcoded aqui
     static let sampleData: [AestheticModel] = [
         AestheticModel(
             name: "Prisma",
@@ -50,15 +52,6 @@ extension AestheticModel {
                 ImageModel(title: "Ghosts", author: "???", imageURL: "yung"),
             ]
         ),
-        // AestheticModel(
-        //     name: "Learning",
-        //     image: "figma",
-        //     allReferences: [
-        //         ImageModel(title: "Figma 01", author: "me", imageURL: "app_01"),
-        //         ImageModel(title: "Figma 02", author: "me", imageURL: "app_02"),
-        //         ImageModel(title: "Figma 03", author: "me", imageURL: "app_03"),
-        //     ]
-        // ),
         AestheticModel(
             name: "Cinematic",
             image: "seila",

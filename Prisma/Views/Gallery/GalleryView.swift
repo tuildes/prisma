@@ -4,8 +4,6 @@ class GalleryView: UIView {
 
     // MARK: - Properties
     private lazy var waveMaskLayer = CAShapeLayer()
-    var onFilterTapped: ((ImageType?) -> Void)?
-    private var filterButtons: [UIButton] = []
     var aesthetic: AestheticModel? {
         didSet {
             setupUI()

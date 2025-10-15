@@ -5,15 +5,6 @@ class AestheticPolaroidView: UIControl {
     private var padding: CGFloat = 12
     private var aestheticModel: AestheticModel = .placeholder
 
-    // MARK: - Overrides properties
-    override var isHighlighted: Bool {
-        didSet {
-            if isHighlighted {
-                animateOnTouchDown()
-            }
-        }
-    }
-
     // MARK: - Subviews
     private(set) var backgroundImage: UIImageView = {
         let imageView = UIImageView()
@@ -125,10 +116,5 @@ class AestheticPolaroidView: UIControl {
             contentStack.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 8),
             contentStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -padding),
         ])
-    }
-
-    // MARK - Functions
-    func animateOnTouchDown() {
-        // TODO: Add animation
     }
 }

@@ -98,12 +98,7 @@ class ImageCardCell: UICollectionViewCell {
     }
 
     private func setupSubViews() {
-        // addSubview(backgroundImage)
         addSubview(referenceImage)
-        // addSubview(contentStack)
-
-        // contentStack.addArrangedSubview(titleName)
-        // contentStack.addArrangedSubview(authorLabel)
     }
 
     private func setupConstraints() {
@@ -112,20 +107,10 @@ class ImageCardCell: UICollectionViewCell {
             self.centerXAnchor.constraint(equalTo: centerXAnchor),
             self.centerYAnchor.constraint(equalTo: centerYAnchor),
 
-            // backgroundImage.topAnchor.constraint(equalTo: topAnchor),
-            // backgroundImage.leadingAnchor.constraint(equalTo: leadingAnchor),
-            // backgroundImage.trailingAnchor.constraint(equalTo: trailingAnchor),
-            // backgroundImage.bottomAnchor.constraint(equalTo: bottomAnchor),
-
             referenceImage.topAnchor.constraint(equalTo: topAnchor),
             referenceImage.leadingAnchor.constraint(equalTo: leadingAnchor),
             referenceImage.trailingAnchor.constraint(equalTo: trailingAnchor),
             referenceImage.bottomAnchor.constraint(equalTo: bottomAnchor),
-
-            // contentStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
-            // contentStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
-            // contentStack.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -12),
-            // contentStack.heightAnchor.constraint(equalToConstant: 48),
         ])
     }
 

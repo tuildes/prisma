@@ -1,10 +1,12 @@
 import UIKit
 
+// Essa tela não tem divisão entre View e ViewController
 class FullScreenImageViewController: UIViewController {
 
     // MARK: - Properties
     var image: UIImage?
 
+    // MARK: - SubViews
     private lazy var blurEffectView: UIVisualEffectView = {
         let blurEffect = UIBlurEffect(style: .systemMaterialDark)
         let view = UIVisualEffectView(effect: blurEffect)

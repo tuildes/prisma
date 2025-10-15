@@ -37,6 +37,8 @@ class HomeViewController: UIViewController {
 
     // MARK: - Functions
     func navigateToGalleryView() {
+        guard allEsthetics[currentEstheticIndex].allReferences.count > 0 else { return }
+
         let galleryVC = GalleryViewController()
         galleryVC.aesthetic = allEsthetics[currentEstheticIndex]
 

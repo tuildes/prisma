@@ -11,8 +11,6 @@ class ImageDetailView: UIView {
                 self.titleLabel.alpha = newAlpha
                 self.authorLabel.alpha = newAlpha
                 self.buttonsStackView.alpha = newAlpha
-                // O botão 'hideHUDButton' não deve desaparecer junto
-                // self.hideHUDButton.alpha = newAlpha
             }
         }
     }
@@ -81,14 +79,8 @@ class ImageDetailView: UIView {
         config.imagePadding = 8
         config.baseForegroundColor = .white
 
-        let shadow = NSShadow()
-        shadow.shadowColor = UIColor.black.withAlphaComponent(0.8)
-        shadow.shadowOffset = CGSize(width: 1, height: 1)
-        shadow.shadowBlurRadius = 3
-
         var titleContainer = AttributeContainer()
         titleContainer.font = UIFont.systemFont(ofSize: 12, weight: .semibold)
-        titleContainer.shadow = shadow
 
         config.attributedTitle = AttributedString(title, attributes: titleContainer)
 
