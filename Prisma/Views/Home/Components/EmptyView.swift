@@ -3,15 +3,48 @@ import UIKit
 class EmptyView: UIView {
 
     // MARK: - Subviews
-    private(set) lazy var titleLabel: UILabel = {
-        let label = UILabel()
+    private(set) lazy var titleLabel: PrismaTitleLabel = {
+        let label = PrismaTitleLabel()
+
+        label.setSize(size: 32, style: .largeTitle)
+        label.setText("No Aesthetics Yet")
 
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Prisma"
-        label.font = UIFont(name: "Staatliches", size: 32)
-        label.textColor = .prismaText
 
         return label
+    }()
+
+    private(set) lazy var descriptionLabel: PrismaTitleLabel = {
+        let label = PrismaTitleLabel()
+
+        label.setSize(size: 16, style: .body)
+        label.setText("Tap the + button to create your first aesthetic.")
+
+        label.translatesAutoresizingMaskIntoConstraints = false
+
+        return label
+    }()
+
+    private(set) lazy var logoImageView: UIImageView = {
+        let imageView = UIImageView()
+
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(named: "logo")
+        imageView.accessibilityLabel = "App Logo"
+
+        return imageView
+    }()
+
+    private(set) lazy var stackView: UIStackView = {
+        let stackView = UIStackView()
+
+        stackView.axis = .vertical
+        stackView.spacing = 16
+        stackView.alignment = .center
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+
+        return stackView
     }()
 
     // MARK: - Initializers
@@ -27,13 +60,20 @@ class EmptyView: UIView {
     }
 
     private func setupSubViews() {
-        addSubview(titleLabel)
+        addSubview(stackView)
+
+        stackView.addArrangedSubview(logoImageView)
+        stackView.addArrangedSubview(titleLabel)
+        stackView.addArrangedSubview(descriptionLabel)
     }
 
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-            titleLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
-            titleLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
+            stackView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            stackView.centerYAnchor.constraint(equalTo: centerYAnchor),
+
+            logoImageView.widthAnchor.constraint(equalToConstant: 200),
+            logoImageView.heightAnchor.constraint(equalToConstant: 200),
         ])
     }
 

@@ -38,7 +38,7 @@ final class HomeViewModel: HomeViewModelProtocol {
 
     // MARK: - Initializers
     init() {
-        loadAesthetics()
+        // loadAesthetics()
     }
 
     // MARK: - Functions
