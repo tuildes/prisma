@@ -1,6 +1,6 @@
 import UIKit
 
-class AestheticPolaroidView: UIControl {
+class PolaroidView: UIControl {
     // MARK: - Properties
     private var padding: CGFloat = 12
     private var aestheticModel: AestheticModel = .placeholder
@@ -40,22 +40,24 @@ class AestheticPolaroidView: UIControl {
         return imageView
     }()
 
-    private(set) lazy var titleName: UILabel = {
-        let label = UILabel()
+    private(set) lazy var titleName: PrismaTitleLabel = {
+        let label = PrismaTitleLabel()
+
+        label.setSize(size: 36, style: .largeTitle)
+        label.setText("Aesthetic Name")
 
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont(name: "Staatliches", size: 48)
-        label.textColor = .prismaText
 
         return label
     }()
 
-    private(set) lazy var totalReferencesLabel: UILabel = {
-        let label = UILabel()
+    private(set) lazy var totalReferencesLabel: PrismaTitleLabel = {
+        let label = PrismaTitleLabel()
+
+        label.setSize(size: 16, style: .title1)
+        label.setText("0 references")
 
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont(name: "Staatliches", size: 20)
-        label.textColor = .prismaText
 
         return label
     }()
@@ -82,9 +84,9 @@ class AestheticPolaroidView: UIControl {
 
     func configure(with model: AestheticModel) {
         self.aestheticModel = model
-        titleName.text = model.name
         imageView.image = UIImage(named: model.image)
-        totalReferencesLabel.text = "\(model.totalReferences) references"
+        titleName.setText(model.name)
+        totalReferencesLabel.setText("\(model.totalReferences) references")
     }
 
     func setupSubViews() {
@@ -98,11 +100,6 @@ class AestheticPolaroidView: UIControl {
 
     func setupConstraints() {
         NSLayoutConstraint.activate([
-            self.heightAnchor.constraint(equalTo: heightAnchor),
-            self.widthAnchor.constraint(equalTo: widthAnchor),
-            self.centerXAnchor.constraint(equalTo: centerXAnchor),
-            self.centerYAnchor.constraint(equalTo: centerYAnchor),
-
             backgroundImage.topAnchor.constraint(equalTo: topAnchor),
             backgroundImage.leadingAnchor.constraint(equalTo: leadingAnchor),
             backgroundImage.trailingAnchor.constraint(equalTo: trailingAnchor),
@@ -115,6 +112,10 @@ class AestheticPolaroidView: UIControl {
 
             contentStack.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 8),
             contentStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -padding),
+            contentStack.leadingAnchor.constraint(
+                greaterThanOrEqualTo: leadingAnchor,
+                constant: padding
+            ),
         ])
     }
 }

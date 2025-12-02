@@ -21,13 +21,20 @@ struct AestheticModel: Identifiable {
 extension AestheticModel {
     static let placeholder = AestheticModel(
         name: "Placeholder", image: "nostalgia",
-        allReferences: [ImageModel.placeholder, ImageModel.placeholder, ImageModel.placeholder])
+        allReferences: [ImageModel.placeholder, ImageModel.placeholder, ImageModel.placeholder]
+    )
 
     // Dados usado para a apresentacao
     // Como não há backend, os dados estão hardcoded aqui
     static let sampleData: [AestheticModel] = [
         AestheticModel(
-            name: "Prisma",
+            name: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",
+            image: "logo_quadrada",
+            allReferences: []
+        ),
+        AestheticModel(
+            name:
+                "ABC DEF GHI JKL MNO PQR STU VWX YZa bcd efg hij klm nop qrs tuv wxy z01 234 567 89",
             image: "logo_quadrada",
             allReferences: []
         ),

@@ -9,10 +9,19 @@ class HeaderView: UIView {
     private(set) lazy var titleLabel: UILabel = {
         let label = UILabel()
 
+        guard let _ = UIFont(name: "Staatliches", size: 32) else {
+            fatalError("Failed to load the 'Staatliches' font.")
+        }
+
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "Prisma"
-        label.font = UIFont(name: "Staatliches", size: 32)
+        label.font = UIFontMetrics(forTextStyle: .largeTitle).scaledFont(
+            for: UIFont(name: "Staatliches", size: 32)!
+        )
+        label.adjustsFontForContentSizeCategory = true
         label.textColor = .prismaText
+        label.accessibilityLabel = "App Title"
+        label.accessibilityIdentifier = "header_title_label"
 
         return label
     }()
@@ -31,7 +40,7 @@ class HeaderView: UIView {
         button.backgroundColor = .prismaText
         button.layer.cornerRadius = 4
         button.addTarget(self, action: #selector(creationButtonTapped), for: .touchUpInside)
-        button.layer.opacity = 0.2
+        button.layer.opacity = 1
 
         return button
     }()
