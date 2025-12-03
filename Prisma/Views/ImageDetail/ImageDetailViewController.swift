@@ -3,6 +3,7 @@ import UIKit
 class ImageDetailViewController: UIViewController {
     // MARK: - Properties
     private let imageDetailView: ImageDetailView = ImageDetailView()
+    private let viewModel: ImageDetailViewModel = ImageDetailViewModel()
     var imageModel: ImageModel?
 
     // MARK: - Lifecycle
@@ -13,13 +14,23 @@ class ImageDetailViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        if let model = imageModel {
-            imageDetailView.configure(with: model)
+        guard let imageModel = imageModel else {
+            fatalError("ImageDetailViewController initialized without ImageModel")
         }
 
+        imageDetailView.configure(with: imageModel)
+        viewModel.configure(with: imageModel)
+
+        setupActions()
+    }
+
+    private func setupActions() {
         imageDetailView.onOpenImageViewTapped = { [weak self] image in
             self?.presentFullScreenImage(image: image)
+        }
+
+        imageDetailView.onURLButtonTapped = { [weak self] in
+            self?.viewModel.openURL()
         }
     }
 

@@ -40,4 +40,13 @@ class PrismaTitleLabel: UILabel {
         self.accessibilityLabel = text
         self.accessibilityIdentifier = text.replacingOccurrences(of: " ", with: "_").lowercased()
     }
+
+    public func setStroke() {
+        self.textColor = .white
+        self.layer.shadowColor = UIColor.black.cgColor
+        self.layer.shadowRadius = 3.0
+        self.layer.shadowOpacity = 0.9
+        self.layer.shadowOffset = CGSize(width: 2, height: 2)
+        self.layer.masksToBounds = false
+    }
 }
