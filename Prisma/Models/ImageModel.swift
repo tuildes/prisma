@@ -1,40 +1,36 @@
 import Foundation
+import SwiftData
 
-enum ImageType {
-    case image
-    case video
-    case figma
-
-    func description() -> String {
-        switch self {
-        case .image:
-            return "Apenas imagem"
-        case .video:
-            return "Apenas video"
-        case .figma:
-            return "Aprendizados"
-        }
-    }
-}
-
-struct ImageModel: Identifiable {
+@Model
+final class ImageModel: Identifiable {
+    @Attribute(.unique)
     var id: UUID
 
-    var imageURL: String
+    var image: Data
+    var imageDescription: String
     var title: String
 
     var author: String
     var sourceURL: String?
 
-    var type: ImageType
+    var isLightMode: Bool
+
+    @Relationship(.unique)
+    var aesthetic: AestheticModel?
 
     init(
-        title: String, author: String, imageURL: String, sourceURL: String? = nil
+        title: String,
+        author: String,
+        image: Data,
+        imageDescription: String,
+        sourceURL: String? = nil,
+        isLightMode: Bool = false
     ) {
         self.id = UUID()
 
-        self.type = .image
-        self.imageURL = imageURL
+        self.image = image
+        self.imageDescription = imageDescription
+        self.isLightMode = isLightMode
         self.title = title
         self.author = author
         self.sourceURL = sourceURL
@@ -45,6 +41,9 @@ extension ImageModel {
     static let placeholder = ImageModel(
         title: "Image",
         author: "Unknown",
-        imageURL: "bk"
+        image: Data(),
+        imageDescription: "A beautiful scenery",
+        sourceURL: "https://example.com",
+        isLightMode: false
     )
 }

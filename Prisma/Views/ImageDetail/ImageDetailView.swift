@@ -4,9 +4,11 @@ class ImageDetailView: UIView {
 
     // MARK: - Properties
     var onOpenImageViewTapped: ((UIImage?) -> Void)?
+    var onURLButtonTapped: (() -> Void)?
+
     var isHiddenHUD: Bool = false {
         didSet {
-            let newAlpha: CGFloat = isHiddenHUD ? 0.1 : 1.0
+            let newAlpha: CGFloat = isHiddenHUD ? 0.2 : 1.0
             UIView.animate(withDuration: 0.3) {
                 self.titleLabel.alpha = newAlpha
                 self.authorLabel.alpha = newAlpha
@@ -24,89 +26,63 @@ class ImageDetailView: UIView {
         return imageView
     }()
 
-    private(set) lazy var titleLabel: UILabel = {
-        let label = UILabel()
+    private(set) lazy var titleLabel: PrismaTitleLabel = {
+        let label = PrismaTitleLabel()
+
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont(name: "Staatliches", size: 64)
-        label.textColor = .prismaBackground
+        label.setSize(size: 64, style: .title1)
         label.numberOfLines = 0
         label.textAlignment = .right
-
-        label.layer.shadowColor = UIColor.black.cgColor
-        label.layer.shadowRadius = 4.0
-        label.layer.shadowOpacity = 0.8
-        label.layer.shadowOffset = CGSize(width: 2, height: 2)
-        label.layer.masksToBounds = false
+        label.setStroke()
 
         return label
     }()
 
-    private(set) lazy var authorLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont(name: "Staatliches", size: 24)
-        label.textColor = .prismaBackground
-        label.alpha = 0.8
+    private(set) lazy var authorLabel: PrismaTitleLabel = {
+        let label = PrismaTitleLabel()
 
-        label.layer.shadowColor = UIColor.black.cgColor
-        label.layer.shadowRadius = 3.0
-        label.layer.shadowOpacity = 0.9
-        label.layer.shadowOffset = CGSize(width: 2, height: 2)
-        label.layer.masksToBounds = false
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.setStroke()
+        label.numberOfLines = 1
+        label.textAlignment = .right
+        label.setSize(size: 24, style: .body)
 
         return label
     }()
 
     private(set) lazy var buttonsStackView: UIStackView = {
         let stackView = UIStackView()
+
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .horizontal
         stackView.distribution = .fillEqually
         stackView.spacing = 0
+
         return stackView
     }()
 
-    private func createButton(imageName: String, title: String) -> UIButton {
-        let button = UIButton(type: .system)
-        button.translatesAutoresizingMaskIntoConstraints = false
-
-        var config = UIButton.Configuration.plain()
-
-        config.image = UIImage(
-            systemName: imageName,
-            withConfiguration: UIImage.SymbolConfiguration(pointSize: 24, weight: .bold))
-        config.imagePlacement = .top
-        config.imagePadding = 8
-        config.baseForegroundColor = .white
-
-        var titleContainer = AttributeContainer()
-        titleContainer.font = UIFont.systemFont(ofSize: 12, weight: .semibold)
-
-        config.attributedTitle = AttributedString(title, attributes: titleContainer)
-
-        button.configuration = config
-        return button
-    }
-
-    private(set) lazy var openButton: UIButton = {
-        let button = createButton(imageName: "arrow.up.right.square", title: "Open")
+    private(set) lazy var openButton: LabelledButton = {
+        let button = LabelledButton()
+        button.configure(imageName: "arrow.up.right.square", title: "Open")
         button.addTarget(self, action: #selector(openLink), for: .touchUpInside)
         return button
     }()
 
-    private(set) lazy var hideHUDButton: UIButton = {
-        let button = createButton(imageName: "eye.slash", title: "Hide HUD")
+    private(set) lazy var hideHUDButton: LabelledButton = {
+        let button = LabelledButton()
+        button.configure(imageName: "eye.slash", title: "Hide HUD")
         button.addTarget(self, action: #selector(hideHUD), for: .touchUpInside)
         return button
     }()
 
-    private(set) lazy var openImageViewButton: UIButton = {
-        let button = createButton(imageName: "photo", title: "View")
+    private(set) lazy var openImageViewButton: LabelledButton = {
+        let button = LabelledButton()
+        button.configure(imageName: "photo", title: "View")
         button.addTarget(self, action: #selector(openImageView), for: .touchUpInside)
         return button
     }()
 
-    var imageModel: ImageModel?
+    var imageModel: ImageModel = .placeholder
     private let paddingBackground: CGFloat = 2
 
     // MARK: - Initializers
@@ -126,6 +102,7 @@ class ImageDetailView: UIView {
         addSubview(titleLabel)
         addSubview(authorLabel)
         addSubview(buttonsStackView)
+
         buttonsStackView.addArrangedSubview(openButton)
         buttonsStackView.addArrangedSubview(openImageViewButton)
         buttonsStackView.addArrangedSubview(hideHUDButton)
@@ -146,7 +123,9 @@ class ImageDetailView: UIView {
             authorLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
 
             buttonsStackView.bottomAnchor.constraint(
-                equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -16),
+                equalTo: safeAreaLayoutGuide.bottomAnchor,
+                constant: -16
+            ),
             buttonsStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
         ])
     }
@@ -154,33 +133,29 @@ class ImageDetailView: UIView {
     func configure(with model: ImageModel) {
         self.imageModel = model
 
-        self.backgroundImageView.image = UIImage(named: model.imageURL)
-        self.titleLabel.text = model.title
-        self.authorLabel.text = "By \(model.author)"
+        self.backgroundImageView.image = UIImage(data: model.image)
+        self.titleLabel.setText(model.title)
+        self.authorLabel.setText("By \(model.author)")
 
         // Se não houver URL, desabilita o botão de abrir link
         if model.sourceURL == nil || model.sourceURL?.isEmpty == true {
-            openButton.isEnabled = false
-            openButton.alpha = 0.5
-        } else {
-            openButton.isEnabled = true
-            openButton.alpha = 1.0
+            openButton.isEnabledToggle(false)
         }
     }
 
     // MARK: - Actions
-    @objc private func openLink() {
-        guard let urlString = imageModel?.sourceURL, !urlString.isEmpty,
-            let url = URL(string: urlString)
-        else { return }
-        if UIApplication.shared.canOpenURL(url) { UIApplication.shared.open(url) }
+    @objc
+    private func openLink() {
+        onURLButtonTapped?()
     }
 
-    @objc private func openImageView() {
+    @objc
+    private func openImageView() {
         onOpenImageViewTapped?(backgroundImageView.image)
     }
 
-    @objc private func hideHUD() {
+    @objc
+    private func hideHUD() {
         isHiddenHUD = !isHiddenHUD
     }
 }

@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>Encryption</key>
+	<string></string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Staatliches.ttf</string>
@@ -23,5 +25,26 @@
 			</array>
 		</dict>
 	</dict>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<true/>
+	<key>UIApplicationShortcutItems</key>
+	<array>
+		<dict>
+			<key>UIApplicationShortcutItemIconType</key>
+			<string>UIApplicationShortcutIconTypeAdd</string>
+			<key>UIApplicationShortcutItemType</key>
+			<string>AddAesthetic</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>Add new aesthetic</string>
+		</dict>
+		<dict>
+			<key>UIApplicationShortcutItemIconType</key>
+			<string>UIApplicationShortcutIconTypeAdd</string>
+			<key>UIApplicationShortcutItemType</key>
+			<string>AddImage</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>Add new reference</string>
+		</dict>
+	</array>
 </dict>
 </plist>
