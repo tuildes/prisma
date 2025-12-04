@@ -29,6 +29,44 @@ class CreateAestheticViewController: UIViewController {
         aestheticView.onCloseCreation = { [weak self] in
             self?.handleCloseCreation()
         }
+
+        viewModel.onError = { [weak self] title, message in
+            self?.showErrorAlert(title: title, message: message)
+        }
+
+        viewModel.onSuccess = { [weak self] in
+            self?.showSuccessAlert()
+        }
+    }
+
+    private func showSuccessAlert() {
+        let alert = UIAlertController(
+            title: NSLocalizedString("Success", comment: ""),
+            message: NSLocalizedString("Aesthetic created successfully!", comment: ""),
+            preferredStyle: .alert
+        )
+        alert.addAction(
+            UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .default) {
+                [weak self] _ in
+                self?.handleCloseCreation()
+            })
+        present(alert, animated: true, completion: nil)
+    }
+
+    private func showErrorAlert(title: String, message: String) {
+        let alert = UIAlertController(
+            title: title,
+            message: message,
+            preferredStyle: .alert
+        )
+        alert.addAction(
+            UIAlertAction(
+                title: NSLocalizedString("OK", comment: ""),
+                style: .default,
+                handler: nil
+            )
+        )
+        present(alert, animated: true, completion: nil)
     }
 
     // MARK: - Actions

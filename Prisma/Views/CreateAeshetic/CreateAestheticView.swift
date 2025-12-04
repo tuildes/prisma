@@ -223,15 +223,7 @@ class CreateAestheticView: UIView {
     @objc
     private func createButtonTapped() {
         guard let viewModel = viewModel else { return }
-
-        if viewModel.checkValidForm() {
-            viewModel.createAesthetic()
-
-            // TODO: Feedback de sucesso
-            closeCreation()
-        } else {
-            // TODO: Alerta de formulário inválido
-        }
+        viewModel.createAesthetic()
     }
 
     private func closeCreation() {

@@ -3,6 +3,11 @@ import UIKit
 import SwiftData
 
 final class CreateAestheticViewModel {
+
+    // MARK: - View Controllers actions
+    var onError: ((String, String) -> Void)?
+    var onSuccess: (() -> Void)?
+
     // MARK: - Properties
     @Published
     var aestheticName: String = ""
@@ -16,38 +21,30 @@ final class CreateAestheticViewModel {
     // MARK: - Initializer
 
     // MARK: - Actions
-    func checkValidForm() -> Bool {
+    func checkValidForm() throws {
         guard !aestheticName.isEmpty else {
-            print("Invalid form: Aesthetic name is empty")
-            return false
+            throw FormError.emptyField(fieldName: "Aesthetic Name")
         }
 
         guard image != nil else {
-            print("Invalid form: Image is not selected")
-            return false
+            throw FormError.emptyField(fieldName: "Image")
         }
 
         guard !imageDescription.isEmpty else {
-            print("Invalid form: Image description is empty")
-            return false
+            throw FormError.emptyField(fieldName: "Image Description")
         }
-
-        return true
     }
 
     func createAesthetic() {
-        // Verificaoes antes de criar a esttica
-        guard checkValidForm() else {
+        do {
+            try checkValidForm()
+        } catch {
+            onError?(NSLocalizedString("Form Error", comment: ""), error.localizedDescription)
             return
         }
 
-        guard let image = image else {
-            return
-        }
-
-        guard let image = convertImage(image: image) else {
-            return
-        }
+        guard let image = image else { return }
+        guard let image = convertImage(image: image) else { return }
 
         let aesthetic = AestheticModel(
             name: aestheticName,
@@ -63,6 +60,8 @@ final class CreateAestheticViewModel {
         } catch {
             print("Error saving aesthetic: \(error)")
         }
+
+        onSuccess?()
     }
 
     private func convertImage(image: UIImage) -> Data? {

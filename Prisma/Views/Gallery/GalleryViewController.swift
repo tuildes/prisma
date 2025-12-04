@@ -48,7 +48,7 @@ class GalleryViewController: UIViewController {
         let deleteButton = UIBarButtonItem(
             barButtonSystemItem: .trash,
             target: self,
-            action: #selector(deleteAesthetic)
+            action: #selector(deleteButtonTapped)
         )
         navigationItem.rightBarButtonItem = deleteButton
 
@@ -63,6 +63,31 @@ class GalleryViewController: UIViewController {
     }
 
     @objc
+    func deleteButtonTapped() {
+        let alert = UIAlertController(
+            title: "Delete Aesthetic",
+            message:
+                "Are you sure you want to delete this aesthetic? This action cannot be undone.",
+            preferredStyle: .alert
+        )
+
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        alert.addAction(
+            UIAlertAction(
+                title: "Delete", style: .destructive,
+                handler: { [weak self] _ in
+                    self?.deleteAesthetic()
+                    self?.navigateBackAndReloadData()
+                }))
+
+        present(alert, animated: true, completion: nil)
+    }
+
+    func navigateBackAndReloadData() {
+        navigationController?.popViewController(animated: true)
+        reloadDataInPreviousViewController?()
+    }
+
     func deleteAesthetic() {
         let context: ModelContext = SwiftDataContainer.container.mainContext
 
@@ -75,9 +100,6 @@ class GalleryViewController: UIViewController {
         } catch {
             print("Failed to delete aesthetic: \(error)")
         }
-
-        navigationController?.popViewController(animated: true)
-        reloadDataInPreviousViewController?()
     }
 }
 
