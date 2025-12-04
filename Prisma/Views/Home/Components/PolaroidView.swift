@@ -84,7 +84,7 @@ class PolaroidView: UIControl {
 
     func configure(with model: AestheticModel) {
         self.aestheticModel = model
-        imageView.image = UIImage(named: model.image)
+        imageView.image = UIImage(data: model.coverImage)
         titleName.setText(model.name)
         totalReferencesLabel.setText("\(model.totalReferences) references")
     }

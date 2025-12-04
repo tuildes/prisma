@@ -1,5 +1,6 @@
 import Foundation
 import Combine
+import SwiftData
 
 protocol HomeViewModelProtocol {
     var aesthetics: [AestheticModel] { get }
@@ -42,8 +43,16 @@ final class HomeViewModel: HomeViewModelProtocol {
     }
 
     // MARK: - Functions
-    private func loadAesthetics() {
-        self.aesthetics = AestheticModel.sampleData
+    func loadAesthetics() {
+        let descriptor = FetchDescriptor<AestheticModel>()
+
+        do {
+            let context = SwiftDataContainer.container.mainContext
+            let fetchedAesthetics = try context.fetch(descriptor)
+            self.aesthetics = fetchedAesthetics
+        } catch {
+            print("Error fetching aesthetics: \(error)")
+        }
     }
 
     public func nextIndex() {

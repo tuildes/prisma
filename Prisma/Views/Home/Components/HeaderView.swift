@@ -34,13 +34,14 @@ class HeaderView: UIView {
             UIImage(
                 systemName: "plus",
                 withConfiguration: UIImage.SymbolConfiguration(weight: .black)
-            ), for: .normal
+            ),
+            for: .normal
         )
         button.tintColor = .prismaBackground
         button.backgroundColor = .prismaText
         button.layer.cornerRadius = 4
-        button.addTarget(self, action: #selector(creationButtonTapped), for: .touchUpInside)
         button.layer.opacity = 1
+        button.addTarget(self, action: #selector(creationButtonTapped), for: .touchUpInside)
 
         return button
     }()
@@ -64,10 +65,14 @@ class HeaderView: UIView {
 
     func setupConstraints() {
         NSLayoutConstraint.activate([
+            titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: padding),
+            titleLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -padding),
             titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: padding),
-            titleLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
 
-            creationButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -padding),
+            creationButton.trailingAnchor.constraint(
+                equalTo: trailingAnchor,
+                constant: -padding
+            ),
             creationButton.centerYAnchor.constraint(equalTo: centerYAnchor),
             creationButton.widthAnchor.constraint(equalToConstant: 32),
             creationButton.heightAnchor.constraint(equalToConstant: 32),
@@ -78,6 +83,5 @@ class HeaderView: UIView {
     @objc
     private func creationButtonTapped() {
         onCreationButtonAction()
-        print("TODO: Creation Button Tapped")
     }
 }

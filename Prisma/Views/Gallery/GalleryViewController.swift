@@ -16,7 +16,7 @@ class GalleryViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        allReferences = aesthetic.allReferences
+        allReferences = aesthetic.allReferences ?? []
         galleryView.aesthetic = aesthetic
 
         prepareCollectionView()

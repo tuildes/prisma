@@ -113,8 +113,8 @@ class GalleryView: UIView {
         guard let aesthetic else { return }
 
         titleLabel.text = aesthetic.name
-        bannerBackground.image = UIImage(named: aesthetic.image)
-        totalReferences.text = "\(aesthetic.allReferences.count) references"
+        bannerBackground.image = UIImage(data: aesthetic.coverImage)
+        totalReferences.text = "\(aesthetic.totalReferences) references"
     }
 
     func setupSubViews() {

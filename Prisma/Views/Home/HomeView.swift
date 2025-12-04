@@ -1,4 +1,5 @@
 import UIKit
+import Combine
 
 class HomeView: UIView {
 
@@ -7,12 +8,10 @@ class HomeView: UIView {
     var nextAestheticAction: () -> Void = {}
     var previousAestheticAction: () -> Void = {}
 
-
     // MARK: - Private Properties
     private var polaroidViews: [PolaroidView] = []
     private let topCardTransform = CGAffineTransform(rotationAngle: .pi / 40)
     private let bottomCardTransform = CGAffineTransform.identity
-
 
     // MARK: - Subviews
     private(set) lazy var headerView: HeaderView = {

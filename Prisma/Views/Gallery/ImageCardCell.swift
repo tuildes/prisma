@@ -92,7 +92,7 @@ class ImageCardCell: UICollectionViewCell {
     public func configure(with model: ImageModel) {
         self.imageModel = model
 
-        self.referenceImage.image = UIImage(named: model.imageURL)
+        self.referenceImage.image = UIImage(data: model.image)
         self.titleName.text = model.title
         self.authorLabel.text = "By \(model.author)"
     }

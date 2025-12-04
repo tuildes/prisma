@@ -33,10 +33,13 @@ class HomeViewController: UIViewController {
         homeView.previousAestheticAction = { [weak self] in
             self?.onPreviousTapped()
         }
+
+        homeView.headerView.onCreationButtonAction = { [weak self] in
+            self?.navigateToCreateAestheticView()
+        }
     }
 
     func navigateToGalleryView() {
-        // Verificar existencia
         guard viewModel.canNavigateToGallery else { return }
         guard let actualAesthetic = viewModel.getCurrentAesthetic() else { return }
 
@@ -46,7 +49,24 @@ class HomeViewController: UIViewController {
         navigationController?.pushViewController(galleryVC, animated: true)
     }
 
+    func navigateToCreateAestheticView() {
+        let createAestheticVC = CreateAestheticViewController()
+        navigationController?.pushViewController(createAestheticVC, animated: true)
+        createAestheticVC.onCompletionAction = { [weak self] in
+            self?.viewModel.loadAesthetics()
+            self?.updatePolaroidViews()
+            self?.homeView.setupEmptyState(isEmpty: self?.viewModel.isEmptyState ?? true)
+        }
+    }
+
     private func updatePolaroidViews() {
+        // Caso tenha apenas uma
+        if viewModel.totalAesthetics == 1 {
+            guard let onlyAesthetic = viewModel.getCurrentAesthetic() else { return }
+            homeView.configureCards(topAesthetic: onlyAesthetic, bottomAesthetic: onlyAesthetic)
+            return
+        }
+
         guard let topAesthetic = viewModel.getCurrentAesthetic(),
             let bottomAesthetic = viewModel.getNextAesthetic()
         else {

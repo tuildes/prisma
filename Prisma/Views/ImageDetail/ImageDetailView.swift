@@ -133,7 +133,7 @@ class ImageDetailView: UIView {
     func configure(with model: ImageModel) {
         self.imageModel = model
 
-        self.backgroundImageView.image = UIImage(named: model.imageURL)
+        self.backgroundImageView.image = UIImage(data: model.image)
         self.titleLabel.setText(model.title)
         self.authorLabel.setText("By \(model.author)")
 
