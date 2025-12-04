@@ -3,6 +3,11 @@ import UIKit
 import SwiftData
 
 final class CreateImageViewModel: ObservableObject {
+
+    // MARK: - View Controllers actions
+    var onError: ((String, String) -> Void)?
+    var onSuccess: (() -> Void)?
+
     // MARK: - Form Properties
     @Published
     var title: String = ""
@@ -40,7 +45,14 @@ final class CreateImageViewModel: ObservableObject {
     }
 
     func createImage() {
-        guard checkValidForm(), let image = image,
+        do {
+            try checkValidForm()
+        } catch {
+            onError?(NSLocalizedString("Form Error", comment: ""), error.localizedDescription)
+            return
+        }
+
+        guard let image = image,
             let imageData = convertImage(image: image)
         else {
             return
@@ -55,6 +67,8 @@ final class CreateImageViewModel: ObservableObject {
             isLightMode: isLightMode
         )
 
+        print("isLightMode: \(isLightMode)")
+
         if let aestheticID = selectedAestheticID {
             newImage.aesthetic = aesthetics.first { $0.id == aestheticID }
         }
@@ -67,35 +81,30 @@ final class CreateImageViewModel: ObservableObject {
         } catch {
             print("Error saving image: \(error)")
         }
+
+        onSuccess?()
     }
 
-    func checkValidForm() -> Bool {
+    func checkValidForm() throws {
         guard !title.isEmpty else {
-            print("Invalid form: Title is empty.")
-            return false
+            throw FormError.emptyField(fieldName: "Title")
         }
 
         guard !author.isEmpty else {
-            print("Invalid form: Author is empty.")
-            return false
+            throw FormError.emptyField(fieldName: "Author")
         }
 
         guard image != nil else {
-            print("Invalid form: Image is required.")
-            return false
+            throw FormError.emptyField(fieldName: "Image")
         }
 
         guard !imageDescription.isEmpty else {
-            print("Invalid form: Image description is empty.")
-            return false
+            throw FormError.emptyField(fieldName: "Image Description")
         }
 
         guard selectedAestheticID != nil else {
-            print("Invalid form: Aesthetic must be selected.")
-            return false
+            throw FormError.emptyField(fieldName: "Aesthetic")
         }
-
-        return true
     }
 
     private func convertImage(image: UIImage) -> Data? {

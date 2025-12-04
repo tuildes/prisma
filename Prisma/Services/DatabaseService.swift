@@ -8,7 +8,7 @@ class SwiftDataContainer {
 
         let modelConfiguration: ModelConfiguration = ModelConfiguration(
             schema: schema,
-            isStoredInMemoryOnly: true
+            isStoredInMemoryOnly: false
         )
 
         do {

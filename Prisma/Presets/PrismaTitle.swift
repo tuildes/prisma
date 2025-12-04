@@ -44,9 +44,15 @@ class PrismaTitleLabel: UILabel {
     public func setStroke() {
         self.textColor = .white
         self.layer.shadowColor = UIColor.black.cgColor
-        self.layer.shadowRadius = 3.0
-        self.layer.shadowOpacity = 0.9
-        self.layer.shadowOffset = CGSize(width: 2, height: 2)
+        self.layer.shadowRadius = 1.0
+        self.layer.shadowRadius = 4.0
+        self.layer.shadowOpacity = 1
         self.layer.masksToBounds = false
+        self.layer.shadowOffset = CGSize(width: 0, height: 0)
+    }
+
+    public func setTheme(whiteMode: Bool) {
+        self.textColor = whiteMode ? .black : .white
+        self.layer.shadowColor = whiteMode ? UIColor.white.cgColor : UIColor.black.cgColor
     }
 }

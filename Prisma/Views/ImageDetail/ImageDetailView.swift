@@ -5,6 +5,7 @@ class ImageDetailView: UIView {
     // MARK: - Properties
     var onOpenImageViewTapped: ((UIImage?) -> Void)?
     var onURLButtonTapped: (() -> Void)?
+    var whiteMode: Bool = false
 
     var isHiddenHUD: Bool = false {
         didSet {
@@ -65,6 +66,7 @@ class ImageDetailView: UIView {
         let button = LabelledButton()
         button.configure(imageName: "arrow.up.right.square", title: "Open")
         button.addTarget(self, action: #selector(openLink), for: .touchUpInside)
+        button.setTheme(whiteMode: whiteMode)
         return button
     }()
 
@@ -72,6 +74,7 @@ class ImageDetailView: UIView {
         let button = LabelledButton()
         button.configure(imageName: "eye.slash", title: "Hide HUD")
         button.addTarget(self, action: #selector(hideHUD), for: .touchUpInside)
+        button.setTheme(whiteMode: whiteMode)
         return button
     }()
 
@@ -79,6 +82,7 @@ class ImageDetailView: UIView {
         let button = LabelledButton()
         button.configure(imageName: "photo", title: "View")
         button.addTarget(self, action: #selector(openImageView), for: .touchUpInside)
+        button.setTheme(whiteMode: whiteMode)
         return button
     }()
 
@@ -136,6 +140,13 @@ class ImageDetailView: UIView {
         self.backgroundImageView.image = UIImage(data: model.image)
         self.titleLabel.setText(model.title)
         self.authorLabel.setText("By \(model.author)")
+
+        self.whiteMode = model.isLightMode
+        openButton.setTheme(whiteMode: whiteMode)
+        hideHUDButton.setTheme(whiteMode: whiteMode)
+        openImageViewButton.setTheme(whiteMode: whiteMode)
+        titleLabel.setTheme(whiteMode: whiteMode)
+        authorLabel.setTheme(whiteMode: whiteMode)
 
         // Se não houver URL, desabilita o botão de abrir link
         if model.sourceURL == nil || model.sourceURL?.isEmpty == true {

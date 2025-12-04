@@ -62,10 +62,11 @@ class CreateAestheticView: UIView {
         let imageView = UIImageView()
 
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = .scaleAspectFill
+        imageView.contentMode = .scaleAspectFit
         imageView.clipsToBounds = true
-        imageView.backgroundColor = .prismaSecondary
+        imageView.backgroundColor = .prismaText.withAlphaComponent(0.2)
         imageView.layer.cornerRadius = 8
+        imageView.tintColor = .systemGray
         imageView.image = UIImage(systemName: "photo")
 
         imageView.isUserInteractionEnabled = true
@@ -73,19 +74,6 @@ class CreateAestheticView: UIView {
         imageView.addGestureRecognizer(tap)
 
         return imageView
-    }()
-
-    private(set) lazy var selectImageButton: UIButton = {
-        let button = UIButton(type: .system)
-
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("Select Image", for: .normal)
-        button.setTitleColor(.prismaPrimary, for: .normal)
-        button.addTarget(self, action: #selector(selectImageTapped), for: .touchUpInside)
-
-        button.backgroundColor = .clear
-
-        return button
     }()
 
     private(set) lazy var sectionDescriptionLabel: PrismaTitleLabel = {
@@ -158,7 +146,7 @@ class CreateAestheticView: UIView {
         viewModel.$image
             .receive(on: RunLoop.main)
             .sink { [weak self] image in
-                self?.imageView.image = image
+                self?.imageView.image = image ?? UIImage(systemName: "photo")
             }
             .store(in: &cancellables)
 
@@ -183,7 +171,6 @@ class CreateAestheticView: UIView {
 
         stackView.addArrangedSubview(sectionImageLabel)
         stackView.addArrangedSubview(imageView)
-        stackView.addArrangedSubview(selectImageButton)
 
         stackView.addArrangedSubview(sectionDescriptionLabel)
         stackView.addArrangedSubview(imageDescriptionTextField)
@@ -201,8 +188,6 @@ class CreateAestheticView: UIView {
 
             imageView.heightAnchor.constraint(equalToConstant: 200),
             imageView.widthAnchor.constraint(equalTo: stackView.widthAnchor),
-
-            selectImageButton.heightAnchor.constraint(equalToConstant: 44),
 
             createButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             createButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),

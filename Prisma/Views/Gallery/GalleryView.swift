@@ -55,39 +55,30 @@ class GalleryView: UIView {
         stack.axis = .vertical
         stack.alignment = .center
         stack.distribution = .fill
-        stack.spacing = -16
+        stack.spacing = 0
 
         return stack
     }()
 
-    private(set) lazy var titleLabel: UILabel = {
-        let label = UILabel()
+    private(set) lazy var titleLabel: PrismaTitleLabel = {
+        let label = PrismaTitleLabel()
 
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont(name: "Staatliches", size: 64)
-        label.textColor = .white
+        label.setSize(size: 36, style: .largeTitle)
+        label.setStroke()
         label.textAlignment = .center
-
-        label.layer.masksToBounds = false
-        label.layer.shadowRadius = 2
-        label.layer.shadowOpacity = 0.2
-        label.layer.shadowOffset = CGSize(width: 0, height: 0)
+        label.numberOfLines = 0
 
         return label
     }()
 
-    private(set) lazy var totalReferences: UILabel = {
-        let label = UILabel()
+    private(set) lazy var totalReferences: PrismaTitleLabel = {
+        let label = PrismaTitleLabel()
 
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont(name: "Staatliches", size: 24)
-        label.textColor = .white
+        label.setSize(size: 20, style: .body)
+        label.setStroke()
         label.textAlignment = .center
-
-        label.layer.masksToBounds = false
-        label.layer.shadowRadius = 2
-        label.layer.shadowOpacity = 0.2
-        label.layer.shadowOffset = CGSize(width: 0, height: 0)
 
         return label
     }()
@@ -135,6 +126,9 @@ class GalleryView: UIView {
             bannerBackground.leadingAnchor.constraint(equalTo: leadingAnchor),
             bannerBackground.trailingAnchor.constraint(equalTo: trailingAnchor),
             bannerBackground.heightAnchor.constraint(equalToConstant: 240),
+
+            titleLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 64),
+            titleLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -64),
 
             stackOverlay.centerXAnchor.constraint(equalTo: bannerBackground.centerXAnchor),
             stackOverlay.centerYAnchor.constraint(equalTo: bannerBackground.centerYAnchor),

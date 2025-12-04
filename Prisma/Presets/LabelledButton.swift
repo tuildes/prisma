@@ -57,4 +57,14 @@ class LabelledButton: UIButton {
         self.accessibilityLabel = text
         self.accessibilityIdentifier = text.replacingOccurrences(of: " ", with: "_").lowercased()
     }
+
+    public func setTheme(whiteMode: Bool) {
+        if whiteMode {
+            self.configuration?.baseBackgroundColor = .white
+            self.configuration?.baseForegroundColor = .black
+        } else {
+            self.configuration?.baseBackgroundColor = .black
+            self.configuration?.baseForegroundColor = .white
+        }
+    }
 }
