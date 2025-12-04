@@ -13,6 +13,7 @@ class GalleryView: UIView {
     // MARK: - Subviews
     private(set) lazy var emptyStateLabel: PrismaTitleLabel = {
         let label = PrismaTitleLabel()
+        label.setSize(size: 20, style: .footnote)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text =
             "No Images Available\nTap the + button in home to add images to this aesthetic."
@@ -64,10 +65,10 @@ class GalleryView: UIView {
         let label = PrismaTitleLabel()
 
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.setSize(size: 36, style: .largeTitle)
+        label.setSize(size: 32, style: .largeTitle)
         label.setStroke()
         label.textAlignment = .center
-        label.numberOfLines = 0
+        label.numberOfLines = 2
 
         return label
     }()

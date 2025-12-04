@@ -372,14 +372,7 @@ class CreateImageView: UIView {
 // MARK: - UITextFieldDelegate
 extension CreateImageView: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        // Lógica simples de navegação (Tab index)
-        switch textField {
-            case titleTextField: authorTextField.becomeFirstResponder()
-            case authorTextField: descriptionTextField.becomeFirstResponder()
-            case descriptionTextField: sourceTextField.becomeFirstResponder()
-            case sourceTextField: textField.resignFirstResponder()
-            default: textField.resignFirstResponder()
-        }
+        textField.resignFirstResponder()
         return true
     }
 }

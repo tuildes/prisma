@@ -31,7 +31,7 @@ class ImageDetailView: UIView {
         let label = PrismaTitleLabel()
 
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.setSize(size: 64, style: .title1)
+        label.setSize(size: 48, style: .title1)
         label.numberOfLines = 0
         label.textAlignment = .right
         label.setStroke()
@@ -46,7 +46,7 @@ class ImageDetailView: UIView {
         label.setStroke()
         label.numberOfLines = 1
         label.textAlignment = .right
-        label.setSize(size: 24, style: .body)
+        label.setSize(size: 20, style: .body)
 
         return label
     }()
@@ -121,10 +121,12 @@ class ImageDetailView: UIView {
 
             titleLabel.bottomAnchor.constraint(equalTo: authorLabel.topAnchor, constant: 12),
             titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+            titleLabel.leadingAnchor.constraint(lessThanOrEqualTo: leadingAnchor, constant: 16),
             titleLabel.leadingAnchor.constraint(greaterThanOrEqualTo: leadingAnchor, constant: 16),
 
             authorLabel.bottomAnchor.constraint(equalTo: buttonsStackView.topAnchor, constant: -16),
             authorLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+            authorLabel.leadingAnchor.constraint(lessThanOrEqualTo: leadingAnchor, constant: 16),
 
             buttonsStackView.bottomAnchor.constraint(
                 equalTo: safeAreaLayoutGuide.bottomAnchor,

@@ -26,11 +26,9 @@ class CreateAestheticView: UIView {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
         stackView.alignment = .fill
-        stackView.spacing = 12  // Aumentei um pouco o espaçamento para respirar
+        stackView.spacing = 12
         return stackView
     }()
-
-    // --- Inputs Section ---
 
     private(set) lazy var sectionTitleLabel: PrismaTitleLabel = {
         let label = PrismaTitleLabel()
@@ -43,6 +41,7 @@ class CreateAestheticView: UIView {
         let textField = PrismaTextField()
         textField.placeholder = "Aesthetic Name"
         textField.autocapitalizationType = .words
+        textField.delegate = self
 
         return textField
     }()
@@ -93,6 +92,7 @@ class CreateAestheticView: UIView {
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.placeholder = "Image Description"
         textField.autocapitalizationType = .sentences
+        textField.delegate = self
 
         return textField
     }()
@@ -213,5 +213,17 @@ class CreateAestheticView: UIView {
 
     private func closeCreation() {
         onCloseCreation?()
+    }
+}
+
+extension CreateAestheticView: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        // switch textField {
+        //     case aestheticNameTextField: imageDescriptionTextField.becomeFirstResponder()
+        //     case imageDescriptionTextField: textField.resignFirstResponder()
+        //     default: textField.resignFirstResponder()
+        // }
+        return true
     }
 }
