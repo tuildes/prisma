@@ -8,7 +8,7 @@ final class AestheticModel: Identifiable {
 
     var name: String
 
-    @Relationship(deleteRule: .nullify, inverse: \ImageModel.aesthetic)
+    @Relationship(deleteRule: .cascade, inverse: \ImageModel.aesthetic)
     var allReferences: [ImageModel]?
 
     @Attribute(.externalStorage)

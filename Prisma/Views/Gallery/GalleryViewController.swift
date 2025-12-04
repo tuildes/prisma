@@ -1,4 +1,5 @@
 import UIKit
+import SwiftData
 
 class GalleryViewController: UIViewController {
 
@@ -6,6 +7,7 @@ class GalleryViewController: UIViewController {
     private let galleryView: GalleryView = GalleryView()
     var aesthetic: AestheticModel = .placeholder
     private var allReferences: [ImageModel] = []
+    var reloadDataInPreviousViewController: (() -> Void)?
 
     // MARK: - Lifecycle
     override func loadView() {
@@ -21,11 +23,14 @@ class GalleryViewController: UIViewController {
 
         prepareCollectionView()
         updateEmptyState()
+        setupToolbar()
     }
 
     func prepareCollectionView() {
         galleryView.collectionView.register(
-            ImageCardCell.self, forCellWithReuseIdentifier: ImageCardCell.identifier)
+            ImageCardCell.self,
+            forCellWithReuseIdentifier: ImageCardCell.identifier
+        )
         galleryView.collectionView.dataSource = self
         galleryView.collectionView.delegate = self
     }
@@ -39,11 +44,40 @@ class GalleryViewController: UIViewController {
         }
     }
 
+    private func setupToolbar() {
+        let deleteButton = UIBarButtonItem(
+            barButtonSystemItem: .trash,
+            target: self,
+            action: #selector(deleteAesthetic)
+        )
+        navigationItem.rightBarButtonItem = deleteButton
+
+        navigationController?.setToolbarHidden(false, animated: false)
+    }
+
     // MARK: - Actions
     func navigateToImageDetail(with imageModel: ImageModel) {
         let imageDetailVC = ImageDetailViewController()
         imageDetailVC.imageModel = imageModel
         navigationController?.pushViewController(imageDetailVC, animated: true)
+    }
+
+    @objc
+    func deleteAesthetic() {
+        let context: ModelContext = SwiftDataContainer.container.mainContext
+
+        print("Deleting aesthetic: \(aesthetic.name)")
+
+        context.delete(aesthetic)
+
+        do {
+            try context.save()
+        } catch {
+            print("Failed to delete aesthetic: \(error)")
+        }
+
+        navigationController?.popViewController(animated: true)
+        reloadDataInPreviousViewController?()
     }
 }
 
@@ -60,15 +94,16 @@ extension GalleryViewController: UICollectionViewDataSource, UICollectionViewDel
     {
         let cell =
             collectionView.dequeueReusableCell(
-                withReuseIdentifier: ImageCardCell.identifier, for: indexPath) as! ImageCardCell
-        // ✨ Usa a lista filtrada
+                withReuseIdentifier: ImageCardCell.identifier,
+                for: indexPath
+            ) as! ImageCardCell
+
         let dataItem = allReferences[indexPath.row]
         cell.configure(with: dataItem)
         return cell
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        // ✨ Usa a lista filtrada
         let selectedItem = allReferences[indexPath.row]
         navigateToImageDetail(with: selectedItem)
         collectionView.deselectItem(at: indexPath, animated: true)

@@ -49,6 +49,11 @@ class HomeViewController: UIViewController {
 
         let galleryVC = GalleryViewController()
         galleryVC.aesthetic = actualAesthetic
+        galleryVC.reloadDataInPreviousViewController = { [weak self] in
+            self?.viewModel.loadAesthetics()
+            self?.updatePolaroidViews()
+            self?.homeView.setupEmptyState(isEmpty: self?.viewModel.isEmptyState ?? true)
+        }
 
         navigationController?.pushViewController(galleryVC, animated: true)
     }
