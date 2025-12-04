@@ -6,47 +6,41 @@ class CreateAestheticView: UIView {
     // MARK: - Properties
     private var viewModel: CreateAestheticViewModel?
     private var cancellables = Set<AnyCancellable>()
+
+    // Actions
     public var onSelectImageTapped: (() -> Void)?
     public var onCloseCreation: (() -> Void)?
 
     // MARK: - Subviews
     private(set) lazy var titleLabel: PrismaTitleLabel = {
         let label = PrismaTitleLabel()
-
         label.translatesAutoresizingMaskIntoConstraints = false
         label.setSize(size: 32, style: .title2)
         label.text = "Create New Aesthetic"
         label.textAlignment = .center
-
         return label
     }()
 
     private(set) lazy var stackView: UIStackView = {
         let stackView = UIStackView()
-
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
         stackView.alignment = .fill
-        stackView.spacing = 4
-
+        stackView.spacing = 12  // Aumentei um pouco o espaçamento para respirar
         return stackView
     }()
 
+    // --- Inputs Section ---
+
     private(set) lazy var sectionTitleLabel: PrismaTitleLabel = {
         let label = PrismaTitleLabel()
-
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.setSize(size: 16, style: .title3)
         label.text = "Aesthetic Name"
-        label.textAlignment = .left
-
         return label
     }()
 
     private(set) lazy var aestheticNameTextField: PrismaTextField = {
         let textField = PrismaTextField()
-
-        textField.translatesAutoresizingMaskIntoConstraints = false
         textField.placeholder = "Aesthetic Name"
         textField.autocapitalizationType = .words
 
@@ -73,6 +67,10 @@ class CreateAestheticView: UIView {
         imageView.backgroundColor = .prismaSecondary
         imageView.layer.cornerRadius = 8
         imageView.image = UIImage(systemName: "photo")
+
+        imageView.isUserInteractionEnabled = true
+        let tap = UITapGestureRecognizer(target: self, action: #selector(selectImageTapped))
+        imageView.addGestureRecognizer(tap)
 
         return imageView
     }()

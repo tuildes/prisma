@@ -3,21 +3,23 @@ import UIKit
 class HeaderView: UIView {
     // MARK: - Properties
     private let padding: CGFloat = 16
-    var onCreationButtonAction: (() -> Void) = {}
+
+    var isImageCreationEnabled: Bool = false
+    var onCreateAesthetic: (() -> Void)?
+    var onCreateImage: (() -> Void)?
 
     // MARK: - Subviews
     private(set) lazy var titleLabel: UILabel = {
         let label = UILabel()
 
-        guard let _ = UIFont(name: "Staatliches", size: 32) else {
-            fatalError("Failed to load the 'Staatliches' font.")
+        if let font = UIFont(name: "Staatliches", size: 32) {
+            label.font = UIFontMetrics(forTextStyle: .largeTitle).scaledFont(for: font)
+        } else {
+            label.font = .systemFont(ofSize: 32, weight: .bold)
         }
 
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "Prisma"
-        label.font = UIFontMetrics(forTextStyle: .largeTitle).scaledFont(
-            for: UIFont(name: "Staatliches", size: 32)!
-        )
         label.adjustsFontForContentSizeCategory = true
         label.textColor = .prismaText
         label.accessibilityLabel = "App Title"
@@ -37,11 +39,11 @@ class HeaderView: UIView {
             ),
             for: .normal
         )
-        button.tintColor = .prismaBackground
-        button.backgroundColor = .prismaText
+        button.tintColor = .prismaText
+        button.backgroundColor = .clear
         button.layer.cornerRadius = 4
         button.layer.opacity = 1
-        button.addTarget(self, action: #selector(creationButtonTapped), for: .touchUpInside)
+        button.showsMenuAsPrimaryAction = true
 
         return button
     }()
@@ -52,6 +54,7 @@ class HeaderView: UIView {
 
         setupSubViews()
         setupConstraints()
+        setupMenu()
     }
 
     required init?(coder: NSCoder) {
@@ -79,9 +82,28 @@ class HeaderView: UIView {
         ])
     }
 
-    // MARK: - Functions
-    @objc
-    private func creationButtonTapped() {
-        onCreationButtonAction()
+    // MARK: - Menu Configuration
+    private func setupMenu() {
+        let aestheticAction = UIAction(
+            title: "Nova Estética",
+            image: UIImage(systemName: "sparkles")
+        ) { [weak self] _ in
+            self?.onCreateAesthetic?()
+        }
+
+        let imageAction = UIAction(
+            title: "Nova Imagem",
+            image: UIImage(systemName: "photo")
+        ) { [weak self] _ in
+            self?.onCreateImage?()
+        }
+
+        let menu = UIMenu(
+            title: "O que você deseja criar?",
+            options: .displayInline,
+            children: [aestheticAction, imageAction]
+        )
+
+        creationButton.menu = menu
     }
 }

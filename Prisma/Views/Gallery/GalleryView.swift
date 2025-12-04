@@ -11,12 +11,14 @@ class GalleryView: UIView {
     }
 
     // MARK: - Subviews
-    private(set) lazy var emptyStateLabel: UIImageView = {
-        let imageView = UIImageView()
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: "blank")
-        return imageView
+    private(set) lazy var emptyStateLabel: PrismaTitleLabel = {
+        let label = PrismaTitleLabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text =
+            "No Images Available\nTap the + button in home to add images to this aesthetic."
+        label.numberOfLines = 0
+        label.textAlignment = .center
+        return label
     }()
 
     private(set) lazy var collectionView: UICollectionView = {
@@ -146,11 +148,13 @@ class GalleryView: UIView {
             emptyStateLabel.centerXAnchor.constraint(equalTo: collectionView.centerXAnchor),
             emptyStateLabel.centerYAnchor.constraint(equalTo: collectionView.centerYAnchor),
             emptyStateLabel.leadingAnchor.constraint(
-                equalTo: collectionView.leadingAnchor, constant: 16),
+                equalTo: collectionView.leadingAnchor,
+                constant: 16
+            ),
             emptyStateLabel.trailingAnchor.constraint(
-                equalTo: collectionView.trailingAnchor, constant: -16),
-            emptyStateLabel.heightAnchor.constraint(equalToConstant: 360),
-            emptyStateLabel.widthAnchor.constraint(equalToConstant: 360),
+                equalTo: collectionView.trailingAnchor,
+                constant: -16
+            ),
         ])
     }
 

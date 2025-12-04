@@ -76,6 +76,4 @@ class EmptyView: UIView {
             logoImageView.heightAnchor.constraint(equalToConstant: 200),
         ])
     }
-
-    // MARK: - Methods
 }

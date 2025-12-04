@@ -7,6 +7,7 @@ final class ImageModel: Identifiable {
     var id: UUID
 
     var image: Data
+    var imageDescription: String
     var title: String
 
     var author: String
@@ -21,12 +22,14 @@ final class ImageModel: Identifiable {
         title: String,
         author: String,
         image: Data,
+        imageDescription: String,
         sourceURL: String? = nil,
         isLightMode: Bool = false
     ) {
         self.id = UUID()
 
         self.image = image
+        self.imageDescription = imageDescription
         self.isLightMode = isLightMode
         self.title = title
         self.author = author
@@ -39,6 +42,7 @@ extension ImageModel {
         title: "Image",
         author: "Unknown",
         image: Data(),
+        imageDescription: "A beautiful scenery",
         sourceURL: "https://example.com",
         isLightMode: false
     )

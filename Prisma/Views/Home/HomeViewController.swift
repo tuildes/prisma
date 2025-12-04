@@ -34,8 +34,12 @@ class HomeViewController: UIViewController {
             self?.onPreviousTapped()
         }
 
-        homeView.headerView.onCreationButtonAction = { [weak self] in
+        homeView.headerView.onCreateAesthetic = { [weak self] in
             self?.navigateToCreateAestheticView()
+        }
+
+        homeView.headerView.onCreateImage = { [weak self] in
+            self?.navigateToCreateImageView()
         }
     }
 
@@ -59,8 +63,16 @@ class HomeViewController: UIViewController {
         }
     }
 
+    func navigateToCreateImageView() {
+        let createImageVC = CreateImageViewController()
+        navigationController?.pushViewController(createImageVC, animated: true)
+        createImageVC.onCompletionAction = { [weak self] in
+            self?.viewModel.loadAesthetics()
+            self?.updatePolaroidViews()
+        }
+    }
+
     private func updatePolaroidViews() {
-        // Caso tenha apenas uma
         if viewModel.totalAesthetics == 1 {
             guard let onlyAesthetic = viewModel.getCurrentAesthetic() else { return }
             homeView.configureCards(topAesthetic: onlyAesthetic, bottomAesthetic: onlyAesthetic)
