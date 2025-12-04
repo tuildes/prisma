@@ -27,5 +27,24 @@
 	</dict>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
+	<key>UIApplicationShortcutItems</key>
+	<array>
+		<dict>
+			<key>UIApplicationShortcutItemIconType</key>
+			<string>UIApplicationShortcutIconTypeAdd</string>
+			<key>UIApplicationShortcutItemType</key>
+			<string>AddAesthetic</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>Add new aesthetic</string>
+		</dict>
+		<dict>
+			<key>UIApplicationShortcutItemIconType</key>
+			<string>UIApplicationShortcutIconTypeAdd</string>
+			<key>UIApplicationShortcutItemType</key>
+			<string>AddImage</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>Add new reference</string>
+		</dict>
+	</array>
 </dict>
 </plist>
