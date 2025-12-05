@@ -219,11 +219,6 @@ class CreateAestheticView: UIView {
 extension CreateAestheticView: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
-        // switch textField {
-        //     case aestheticNameTextField: imageDescriptionTextField.becomeFirstResponder()
-        //     case imageDescriptionTextField: textField.resignFirstResponder()
-        //     default: textField.resignFirstResponder()
-        // }
         return true
     }
 }
