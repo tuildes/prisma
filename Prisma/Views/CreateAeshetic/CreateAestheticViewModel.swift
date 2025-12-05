@@ -26,6 +26,10 @@ final class CreateAestheticViewModel {
             throw FormError.emptyField(fieldName: "Aesthetic Name")
         }
 
+        guard aestheticName.count <= 30 else {
+            throw FormError.maxLengthExceeded(fieldName: "Aesthetic Name", maxLength: 30)
+        }
+
         guard image != nil else {
             throw FormError.emptyField(fieldName: "Image")
         }

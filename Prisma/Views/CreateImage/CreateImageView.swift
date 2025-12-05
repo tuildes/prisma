@@ -53,25 +53,18 @@ class CreateImageView: UIView {
         let imageView = UIImageView()
 
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = .scaleAspectFill
+        imageView.contentMode = .scaleAspectFit
         imageView.clipsToBounds = true
-        imageView.backgroundColor = .prismaSecondary
+        imageView.backgroundColor = .prismaText.withAlphaComponent(0.2)
         imageView.layer.cornerRadius = 8
-        imageView.tintColor = .systemGray3
+        imageView.tintColor = .systemGray
+        imageView.image = UIImage(systemName: "photo")
         imageView.isUserInteractionEnabled = true
 
         let tap = UITapGestureRecognizer(target: self, action: #selector(selectImageTapped))
         imageView.addGestureRecognizer(tap)
 
         return imageView
-    }()
-
-    private(set) lazy var selectImageButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("Select Cover Image", for: .normal)
-        button.setTitleColor(.prismaPrimary, for: .normal)
-        button.addTarget(self, action: #selector(selectImageTapped), for: .touchUpInside)
-        return button
     }()
 
     // --- Aesthetic Selector (Relationship) ---
@@ -228,8 +221,7 @@ class CreateImageView: UIView {
         viewModel.$image
             .receive(on: RunLoop.main)
             .sink { [weak self] image in
-                self?.imageView.image = image ?? UIImage()
-                self?.imageView.layer.borderWidth = image != nil ? 0 : 1
+                self?.imageView.image = image ?? UIImage(systemName: "photo")
             }
             .store(in: &cancellables)
     }
@@ -266,7 +258,6 @@ class CreateImageView: UIView {
 
         let views = [
             imageView,
-            selectImageButton,
 
             sectionLabel(text: "Title"),
             titleTextField,
@@ -288,7 +279,6 @@ class CreateImageView: UIView {
 
         views.forEach { stackView.addArrangedSubview($0) }
 
-        stackView.setCustomSpacing(24, after: selectImageButton)
         stackView.setCustomSpacing(24, after: aestheticSelectorButton)
     }
 
@@ -335,7 +325,6 @@ class CreateImageView: UIView {
 
             // Tamanhos fixos específicos
             imageView.heightAnchor.constraint(equalToConstant: 200),
-            selectImageButton.heightAnchor.constraint(equalToConstant: 30),
             aestheticSelectorButton.heightAnchor.constraint(equalToConstant: 50),
         ])
     }
@@ -367,7 +356,6 @@ class CreateImageView: UIView {
     @objc
     private func createButtonTapped() {
         guard let viewModel = viewModel else { return }
-        guard viewModel.checkValidForm() else { return }
 
         viewModel.createImage()
 
@@ -384,14 +372,7 @@ class CreateImageView: UIView {
 // MARK: - UITextFieldDelegate
 extension CreateImageView: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        // Lógica simples de navegação (Tab index)
-        switch textField {
-            case titleTextField: authorTextField.becomeFirstResponder()
-            case authorTextField: descriptionTextField.becomeFirstResponder()
-            case descriptionTextField: sourceTextField.becomeFirstResponder()
-            case sourceTextField: textField.resignFirstResponder()
-            default: textField.resignFirstResponder()
-        }
+        textField.resignFirstResponder()
         return true
     }
 }

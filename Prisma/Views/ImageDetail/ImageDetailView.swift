@@ -5,6 +5,7 @@ class ImageDetailView: UIView {
     // MARK: - Properties
     var onOpenImageViewTapped: ((UIImage?) -> Void)?
     var onURLButtonTapped: (() -> Void)?
+    var whiteMode: Bool = false
 
     var isHiddenHUD: Bool = false {
         didSet {
@@ -30,7 +31,7 @@ class ImageDetailView: UIView {
         let label = PrismaTitleLabel()
 
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.setSize(size: 64, style: .title1)
+        label.setSize(size: 48, style: .title1)
         label.numberOfLines = 0
         label.textAlignment = .right
         label.setStroke()
@@ -45,7 +46,7 @@ class ImageDetailView: UIView {
         label.setStroke()
         label.numberOfLines = 1
         label.textAlignment = .right
-        label.setSize(size: 24, style: .body)
+        label.setSize(size: 20, style: .body)
 
         return label
     }()
@@ -65,6 +66,7 @@ class ImageDetailView: UIView {
         let button = LabelledButton()
         button.configure(imageName: "arrow.up.right.square", title: "Open")
         button.addTarget(self, action: #selector(openLink), for: .touchUpInside)
+        button.setTheme(whiteMode: whiteMode)
         return button
     }()
 
@@ -72,6 +74,7 @@ class ImageDetailView: UIView {
         let button = LabelledButton()
         button.configure(imageName: "eye.slash", title: "Hide HUD")
         button.addTarget(self, action: #selector(hideHUD), for: .touchUpInside)
+        button.setTheme(whiteMode: whiteMode)
         return button
     }()
 
@@ -79,6 +82,7 @@ class ImageDetailView: UIView {
         let button = LabelledButton()
         button.configure(imageName: "photo", title: "View")
         button.addTarget(self, action: #selector(openImageView), for: .touchUpInside)
+        button.setTheme(whiteMode: whiteMode)
         return button
     }()
 
@@ -117,10 +121,12 @@ class ImageDetailView: UIView {
 
             titleLabel.bottomAnchor.constraint(equalTo: authorLabel.topAnchor, constant: 12),
             titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+            titleLabel.leadingAnchor.constraint(lessThanOrEqualTo: leadingAnchor, constant: 16),
             titleLabel.leadingAnchor.constraint(greaterThanOrEqualTo: leadingAnchor, constant: 16),
 
             authorLabel.bottomAnchor.constraint(equalTo: buttonsStackView.topAnchor, constant: -16),
             authorLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+            authorLabel.leadingAnchor.constraint(lessThanOrEqualTo: leadingAnchor, constant: 16),
 
             buttonsStackView.bottomAnchor.constraint(
                 equalTo: safeAreaLayoutGuide.bottomAnchor,
@@ -136,6 +142,13 @@ class ImageDetailView: UIView {
         self.backgroundImageView.image = UIImage(data: model.image)
         self.titleLabel.setText(model.title)
         self.authorLabel.setText("By \(model.author)")
+
+        self.whiteMode = model.isLightMode
+        openButton.setTheme(whiteMode: whiteMode)
+        hideHUDButton.setTheme(whiteMode: whiteMode)
+        openImageViewButton.setTheme(whiteMode: whiteMode)
+        titleLabel.setTheme(whiteMode: whiteMode)
+        authorLabel.setTheme(whiteMode: whiteMode)
 
         // Se não houver URL, desabilita o botão de abrir link
         if model.sourceURL == nil || model.sourceURL?.isEmpty == true {
