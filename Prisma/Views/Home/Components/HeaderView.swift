@@ -24,6 +24,7 @@ class HeaderView: UIView {
         label.textColor = .prismaText
         label.accessibilityLabel = "App Title"
         label.accessibilityIdentifier = "header_title_label"
+        label.accessibilityHint = "Title of the Prisma application"
 
         return label
     }()
@@ -44,6 +45,9 @@ class HeaderView: UIView {
         button.layer.cornerRadius = 4
         button.layer.opacity = 1
         button.showsMenuAsPrimaryAction = true
+
+        button.accessibilityHint = "Create a new aesthetic or image"
+        button.accessibilityLabel = "Create Button"
 
         return button
     }()

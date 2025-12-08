@@ -5,6 +5,7 @@ class FullScreenImageViewController: UIViewController {
 
     // MARK: - Properties
     var image: UIImage?
+    var imageDescription: String?
     private var fullScreenImageView: FullScreenImageView = FullScreenImageView()
 
     // MARK: - Setup
@@ -12,7 +13,7 @@ class FullScreenImageViewController: UIViewController {
         super.viewDidLoad()
 
         view = fullScreenImageView
-        fullScreenImageView.configure(with: image)
+        fullScreenImageView.configure(with: image, imageDescription: imageDescription)
 
         setupActions()
     }

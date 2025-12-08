@@ -39,7 +39,10 @@ class ImageDetailViewController: UIViewController {
 
     private func setupActions() {
         imageDetailView.onOpenImageViewTapped = { [weak self] image in
-            self?.presentFullScreenImage(image: image)
+            self?.presentFullScreenImage(
+                image: image,
+                imageDescription: self?.imageModel?.imageDescription
+            )
         }
 
         imageDetailView.onURLButtonTapped = { [weak self] in
@@ -58,10 +61,11 @@ class ImageDetailViewController: UIViewController {
     }
 
     // MARK: - Actions
-    private func presentFullScreenImage(image: UIImage?) {
+    private func presentFullScreenImage(image: UIImage?, imageDescription: String?) {
         let fullScreenVC = FullScreenImageViewController()
 
         fullScreenVC.image = image
+        fullScreenVC.imageDescription = imageDescription
         fullScreenVC.modalPresentationStyle = .overFullScreen
         fullScreenVC.modalTransitionStyle = .crossDissolve
 

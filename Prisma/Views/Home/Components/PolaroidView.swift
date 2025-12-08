@@ -13,6 +13,7 @@ class PolaroidView: UIControl {
         imageView.contentMode = .scaleAspectFill
         imageView.image = UIImage(named: "paper_texture")
         imageView.clipsToBounds = true
+        imageView.isAccessibilityElement = false
 
         return imageView
     }()
@@ -45,6 +46,7 @@ class PolaroidView: UIControl {
 
         label.setSize(size: 36, style: .largeTitle)
         label.setText("Aesthetic Name")
+        label.accessibilityHint = "Name of the aesthetic"
 
         label.translatesAutoresizingMaskIntoConstraints = false
 
@@ -56,6 +58,7 @@ class PolaroidView: UIControl {
 
         label.setSize(size: 16, style: .title1)
         label.setText("0 references")
+        label.accessibilityHint = "Total number of references for this aesthetic"
 
         label.translatesAutoresizingMaskIntoConstraints = false
 
@@ -85,6 +88,7 @@ class PolaroidView: UIControl {
     func configure(with model: AestheticModel) {
         self.aestheticModel = model
         imageView.image = UIImage(data: model.coverImage)
+        imageView.accessibilityLabel = model.imageDescription
         titleName.setText(model.name)
         totalReferencesLabel.setText("\(model.totalReferences) references")
     }

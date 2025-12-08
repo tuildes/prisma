@@ -140,8 +140,14 @@ class ImageDetailView: UIView {
         self.imageModel = model
 
         self.backgroundImageView.image = UIImage(data: model.image)
+        self.backgroundImageView.accessibilityLabel = model.imageDescription
+        self.backgroundImageView.accessibilityHint = "Reference image"
+
         self.titleLabel.setText(model.title)
+        self.titleLabel.accessibilityHint = "Image title"
+
         self.authorLabel.setText("By \(model.author)")
+        self.authorLabel.accessibilityHint = "Image author"
 
         self.whiteMode = model.isLightMode
         openButton.setTheme(whiteMode: whiteMode)
