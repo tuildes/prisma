@@ -35,12 +35,12 @@ final class HomeViewModel: HomeViewModelProtocol {
         return totalAesthetics > 0 && getCurrentAesthetic() != nil
     }
 
-    // MARK: - Private Properties
 
     // MARK: - Initializers
     init() {
         loadAesthetics()
     }
+
 
     // MARK: - Functions
     func loadAesthetics() {
