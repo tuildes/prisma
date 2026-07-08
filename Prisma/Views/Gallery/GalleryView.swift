@@ -17,6 +17,9 @@ class GalleryView: UIView {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text =
             "No Images Available\nTap the + button in home to add images to this aesthetic."
+        label.accessibilityLabel = "No images are currently available for this aesthetic."
+        label.accessibilityHint = "Empty State Message"
+
         label.numberOfLines = 0
         label.textAlignment = .center
         return label
@@ -67,6 +70,7 @@ class GalleryView: UIView {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.setSize(size: 32, style: .largeTitle)
         label.setStroke()
+        label.accessibilityHint = "Name of the aesthetic"
         label.textAlignment = .center
         label.numberOfLines = 2
 
@@ -80,6 +84,7 @@ class GalleryView: UIView {
         label.setSize(size: 20, style: .body)
         label.setStroke()
         label.textAlignment = .center
+        label.accessibilityHint = "Total number of references for this aesthetic"
 
         return label
     }()
@@ -107,8 +112,17 @@ class GalleryView: UIView {
         guard let aesthetic else { return }
 
         titleLabel.text = aesthetic.name
+        titleLabel.accessibilityLabel = "Aesthetic name: \(aesthetic.name)"
+        titleLabel.accessibilityHint = "Name of the aesthetic"
+
         bannerBackground.image = UIImage(data: aesthetic.coverImage)
+        bannerBackground.accessibilityLabel = aesthetic.imageDescription
+        bannerBackground.accessibilityHint = "Cover image for the aesthetic"
+
         totalReferences.text = "\(aesthetic.totalReferences) references"
+        totalReferences.accessibilityLabel =
+            "Total references: \(aesthetic.totalReferences) references"
+        totalReferences.accessibilityHint = "Total number of references for this aesthetic"
     }
 
     func setupSubViews() {

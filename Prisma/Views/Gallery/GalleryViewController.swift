@@ -60,6 +60,9 @@ class GalleryViewController: UIViewController {
         let imageDetailVC = ImageDetailViewController()
         imageDetailVC.imageModel = imageModel
         navigationController?.pushViewController(imageDetailVC, animated: true)
+        imageDetailVC.reloadDataInPreviousViewController = { [weak self] image in
+            self?.reloadDeleteImage(image)
+        }
     }
 
     @objc
@@ -85,6 +88,13 @@ class GalleryViewController: UIViewController {
 
     func navigateBackAndReloadData() {
         navigationController?.popViewController(animated: true)
+        reloadDataInPreviousViewController?()
+    }
+
+    func reloadDeleteImage(_ image: ImageModel) {
+        allReferences.removeAll { $0.id == image.id }
+        galleryView.collectionView.reloadData()
+        updateEmptyState()
         reloadDataInPreviousViewController?()
     }
 

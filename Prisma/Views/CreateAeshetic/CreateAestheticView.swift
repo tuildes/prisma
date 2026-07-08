@@ -18,6 +18,8 @@ class CreateAestheticView: UIView {
         label.setSize(size: 32, style: .title2)
         label.text = "Create New Aesthetic"
         label.textAlignment = .center
+        label.accessibilityHint = "Title for the Create Aesthetic screen"
+        label.accessibilityLabel = "Create Aesthetic Title"
         return label
     }()
 
@@ -34,6 +36,9 @@ class CreateAestheticView: UIView {
         let label = PrismaTitleLabel()
         label.setSize(size: 16, style: .title3)
         label.text = "Aesthetic Name"
+        label.textAlignment = .left
+        label.accessibilityHint = "Section label for Aesthetic Name"
+        label.accessibilityLabel = "Section Aesthetic Name"
         return label
     }()
 
@@ -42,6 +47,8 @@ class CreateAestheticView: UIView {
         textField.placeholder = "Aesthetic Name"
         textField.autocapitalizationType = .words
         textField.delegate = self
+        textField.accessibilityHint = "Enter the name of the aesthetic here"
+        textField.accessibilityLabel = "Aesthetic Name Text Field"
 
         return textField
     }()
@@ -52,6 +59,8 @@ class CreateAestheticView: UIView {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.setSize(size: 16, style: .title3)
         label.text = "Cover Image"
+        label.accessibilityHint = "Section label for Cover Image"
+        label.accessibilityLabel = "Section Cover Image"
         label.textAlignment = .left
 
         return label
@@ -67,6 +76,9 @@ class CreateAestheticView: UIView {
         imageView.layer.cornerRadius = 8
         imageView.tintColor = .systemGray
         imageView.image = UIImage(systemName: "photo")
+
+        imageView.accessibilityHint = "Cover image for the aesthetic"
+        imageView.accessibilityLabel = "Cover Image View"
 
         imageView.isUserInteractionEnabled = true
         let tap = UITapGestureRecognizer(target: self, action: #selector(selectImageTapped))
@@ -106,6 +118,9 @@ class CreateAestheticView: UIView {
         button.backgroundColor = .prismaPrimary
         button.layer.cornerRadius = 8
         button.addTarget(self, action: #selector(createButtonTapped), for: .touchUpInside)
+
+        button.accessibilityHint = "Create a new aesthetic with the provided details"
+        button.accessibilityLabel = "Create Aesthetic Button"
 
         return button
     }()
@@ -219,11 +234,6 @@ class CreateAestheticView: UIView {
 extension CreateAestheticView: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
-        // switch textField {
-        //     case aestheticNameTextField: imageDescriptionTextField.becomeFirstResponder()
-        //     case imageDescriptionTextField: textField.resignFirstResponder()
-        //     default: textField.resignFirstResponder()
-        // }
         return true
     }
 }

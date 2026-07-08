@@ -93,8 +93,19 @@ class ImageCardCell: UICollectionViewCell {
         self.imageModel = model
 
         self.referenceImage.image = UIImage(data: model.image)
+        self.referenceImage.accessibilityLabel = model.imageDescription
+        self.referenceImage.accessibilityIdentifier = "image_card_reference_\(model.id)"
+        self.referenceImage.accessibilityHint = "Reference image for the aesthetic"
+
         self.titleName.text = model.title
+        self.titleName.accessibilityLabel = "Image title: \(model.title)"
+        self.titleName.accessibilityIdentifier = "image_card_title_\(model.id)"
+        self.titleName.accessibilityHint = "Title of the image"
+
         self.authorLabel.text = "By \(model.author)"
+        self.authorLabel.accessibilityLabel = "Image author: \(model.author)"
+        self.authorLabel.accessibilityIdentifier = "image_card_author_\(model.id)"
+        self.authorLabel.accessibilityHint = "Author of the image"
     }
 
     private func setupSubViews() {

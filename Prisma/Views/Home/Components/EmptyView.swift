@@ -8,6 +8,7 @@ class EmptyView: UIView {
 
         label.setSize(size: 32, style: .largeTitle)
         label.setText("No Aesthetics Yet")
+        label.accessibilityHint = "Title indicating there are no aesthetics"
 
         label.translatesAutoresizingMaskIntoConstraints = false
 
@@ -19,6 +20,7 @@ class EmptyView: UIView {
 
         label.setSize(size: 16, style: .body)
         label.setText("Tap the + button to create your first aesthetic.")
+        label.accessibilityHint = "Description guiding the user to create an aesthetic"
 
         label.translatesAutoresizingMaskIntoConstraints = false
 
@@ -32,6 +34,7 @@ class EmptyView: UIView {
         imageView.contentMode = .scaleAspectFit
         imageView.image = UIImage(named: "logo")
         imageView.accessibilityLabel = "App Logo"
+        imageView.accessibilityHint = "Prisma App Logo"
 
         return imageView
     }()

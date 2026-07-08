@@ -47,8 +47,9 @@ class FullScreenImageView: UIView {
         addSubview(imageView)
     }
 
-    func configure(with image: UIImage?) {
+    func configure(with image: UIImage?, imageDescription: String?) {
         imageView.image = image
+        imageView.accessibilityLabel = imageDescription
         addGestureRecognizers()
     }
 

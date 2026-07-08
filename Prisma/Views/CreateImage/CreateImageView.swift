@@ -33,7 +33,8 @@ class CreateImageView: UIView {
         let label = PrismaTitleLabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.setSize(size: 32, style: .title2)
-        label.text = "Create New Image"
+        label.setText("Create New Image")
+        label.accessibilityHint = "Title for the Create Image screen"
         label.textAlignment = .center
         return label
     }()
@@ -61,6 +62,9 @@ class CreateImageView: UIView {
         imageView.image = UIImage(systemName: "photo")
         imageView.isUserInteractionEnabled = true
 
+        imageView.accessibilityHint = "Cover image for the new image"
+        imageView.accessibilityLabel = "Cover Image View"
+
         let tap = UITapGestureRecognizer(target: self, action: #selector(selectImageTapped))
         imageView.addGestureRecognizer(tap)
 
@@ -86,6 +90,8 @@ class CreateImageView: UIView {
         button.contentHorizontalAlignment = .left
         button.setTitleColor(.label, for: .normal)
         button.setTitle("Select an Aesthetic...", for: .normal)
+        button.accessibilityHint = "Select an Aesthetic for the image"
+        button.accessibilityLabel = "Aesthetic Selector Button"
 
         let arrow = UIImageView(image: UIImage(systemName: "chevron.up.chevron.down"))
         arrow.tintColor = .systemGray3
@@ -109,6 +115,10 @@ class CreateImageView: UIView {
         tf.placeholder = "Image Title"
         tf.autocapitalizationType = .words
         tf.delegate = self
+
+        tf.accessibilityHint = "Enter the title of the image here"
+        tf.accessibilityLabel = "Image Title Text Field"
+
         return tf
     }()
 
@@ -117,6 +127,10 @@ class CreateImageView: UIView {
         tf.placeholder = "Author Name"
         tf.autocapitalizationType = .words
         tf.delegate = self
+
+        tf.accessibilityHint = "Enter the name of the author here"
+        tf.accessibilityLabel = "Author Name Text Field"
+
         return tf
     }()
 
@@ -125,6 +139,8 @@ class CreateImageView: UIView {
         tf.placeholder = "Image Description"
         tf.autocapitalizationType = .sentences
         tf.delegate = self
+        tf.accessibilityHint = "Enter a description for the image here"
+        tf.accessibilityLabel = "Image Description Text Field"
         return tf
     }()
 
@@ -134,6 +150,8 @@ class CreateImageView: UIView {
         tf.keyboardType = .URL
         tf.autocapitalizationType = .none
         tf.delegate = self
+        tf.accessibilityHint = "Enter the source URL for the image here"
+        tf.accessibilityLabel = "Source URL Text Field"
         return tf
     }()
 
@@ -142,6 +160,9 @@ class CreateImageView: UIView {
         let label = PrismaTitleLabel()
         label.setSize(size: 16, style: .body)
         label.text = "Is Light Mode?"
+
+        label.accessibilityHint = "Toggle light mode for the app"
+        label.accessibilityLabel = "Light Mode Label"
 
         let toggle = UISwitch()
         toggle.addTarget(self, action: #selector(toggleChanged(_:)), for: .valueChanged)
@@ -158,6 +179,8 @@ class CreateImageView: UIView {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Create Image", for: .normal)
         button.setTitleColor(.white, for: .normal)
+        button.accessibilityHint = "Create a new image with the provided details"
+        button.accessibilityLabel = "Create Image Button"
         button.backgroundColor = .prismaPrimary
         button.layer.cornerRadius = 8
         button.addTarget(self, action: #selector(createButtonTapped), for: .touchUpInside)
@@ -287,6 +310,8 @@ class CreateImageView: UIView {
         l.setSize(size: 14, style: .caption1)
         l.text = text.uppercased()
         l.textColor = .secondaryLabel
+        l.accessibilityHint = "Section label for \(text)"
+        l.accessibilityLabel = "Section \(text)"
         return l
     }
 
