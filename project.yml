@@ -1,0 +1,50 @@
+name: Prisma
+
+settings:
+  MARKETING_VERSION: "1.3"
+  CURRENT_PROJECT_VERSION: 1
+  base:
+    DEVELOPMENT_TEAM: FHURMLY499
+    CODE_SIGN_STYLE: Automatic
+    ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS: YES
+    ENABLE_USER_SCRIPT_SANDBOXING: YES
+
+targets:
+  Prisma:
+    type: application
+    platform: iOS
+    deploymentTarget: "17.0"
+    sources:
+      - path: Prisma
+        excludes:
+          - Info.plist
+    info:
+      path: Prisma/Info.plist
+      properties:
+        CFBundleDisplayName: Prisma
+        ITSAppUsesNonExemptEncryption: false
+        LSApplicationCategoryType: public.app-category.graphics-design
+        UIApplicationSupportsIndirectInputEvents: true
+        UILaunchStoryboardName: LaunchScreen
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+        UISupportedInterfaceOrientations~ipad:
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationPortraitUpsideDown
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: dev.tuildes.Prisma
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        TARGETED_DEVICE_FAMILY: 1
+        SUPPORTS_MACCATALYST: NO
+        SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD: NO
+        SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD: NO
+        SWIFT_APPROACHABLE_CONCURRENCY: YES
+        SWIFT_DEFAULT_ACTOR_ISOLATION: MainActor
+        SWIFT_EMIT_LOC_STRINGS: YES
+        SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY: YES
+        STRING_CATALOG_GENERATE_SYMBOLS: YES
+        SWIFT_VERSION: "5.0"
