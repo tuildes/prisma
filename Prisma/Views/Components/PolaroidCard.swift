@@ -10,6 +10,7 @@ struct PolaroidCard: View {
             coverImage
                 .frame(maxWidth: .infinity)
                 .aspectRatio(1, contentMode: .fit)
+                .clipped()
                 .clipShape(RoundedRectangle(cornerRadius: 4, style: .continuous))
 
             VStack(alignment: .trailing, spacing: -4) {
@@ -44,16 +45,18 @@ struct PolaroidCard: View {
 
     @ViewBuilder
     private var coverImage: some View {
-        if let uiImage = UIImage(data: aesthetic.coverImage) {
-            Image(uiImage: uiImage)
-                .resizable()
-                .scaledToFill()
-        } else {
-            Color.surface
-                .overlay {
-                    Image(systemName: "photo")
-                        .foregroundStyle(Color.tint)
-                }
+        ZStack {
+            Color.black.opacity(0.06)
+
+            if let uiImage = UIImage(data: aesthetic.coverImage) {
+                Image(uiImage: uiImage)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else {
+                Image(systemName: "photo")
+                    .foregroundStyle(Color.tint)
+            }
         }
     }
 }
