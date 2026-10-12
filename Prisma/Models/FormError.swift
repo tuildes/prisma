@@ -7,12 +7,12 @@ enum FormError: LocalizedError {
 
     var errorDescription: String? {
         switch self {
-            case .emptyField(let fieldName):
-                return "\(fieldName) cannot be empty."
-            case .maxLengthExceeded(let fieldName, let maxLength):
-                return "\(fieldName) cannot exceed \(maxLength) characters."
-            case .invalidImage:
-                return "The selected image is invalid."
+        case .emptyField(let fieldName):
+            return "\(fieldName) is required."
+        case .maxLengthExceeded(let fieldName, let maxLength):
+            return "\(fieldName) cannot exceed \(maxLength) characters."
+        case .invalidImage:
+            return "The selected image is invalid."
         }
     }
 }

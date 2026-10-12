@@ -9,13 +9,10 @@ final class ImageModel: Identifiable {
     var image: Data
     var imageDescription: String
     var title: String
-
     var author: String
     var sourceURL: String?
-
     var isLightMode: Bool
 
-    @Relationship(.unique)
     var aesthetic: AestheticModel?
 
     init(
@@ -27,7 +24,6 @@ final class ImageModel: Identifiable {
         isLightMode: Bool = false
     ) {
         self.id = UUID()
-
         self.image = image
         self.imageDescription = imageDescription
         self.isLightMode = isLightMode

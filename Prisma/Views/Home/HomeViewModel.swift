@@ -1,85 +1,67 @@
 import Foundation
-import Combine
 import SwiftData
 
-protocol HomeViewModelProtocol {
-    var aesthetics: [AestheticModel] { get }
-    var currentIndex: Int { get }
-    var totalAesthetics: Int { get }
-
-    var isEmptyState: Bool { get }
-    var canNavigateToGallery: Bool { get }
-
-    func nextIndex()
-    func previousIndex()
-    func getCurrentAesthetic() -> AestheticModel?
-    func getNextAesthetic() -> AestheticModel?
-}
-
-final class HomeViewModel: HomeViewModelProtocol {
-    @Published
-    var aesthetics: [AestheticModel] = []
-
-    @Published
+@Observable
+@MainActor
+final class HomeViewModel {
+    private(set) var aesthetics: [AestheticModel] = []
     var currentIndex: Int = 0
 
-    public var isEmptyState: Bool {
-        return aesthetics.isEmpty
+    var isEmptyState: Bool { aesthetics.isEmpty }
+    var totalAesthetics: Int { aesthetics.count }
+
+    var canNavigateToGallery: Bool {
+        totalAesthetics > 0 && currentAesthetic != nil
     }
 
-    public var totalAesthetics: Int {
-        return aesthetics.count
+    var currentAesthetic: AestheticModel? {
+        guard totalAesthetics > 0 else { return nil }
+        let index = min(max(currentIndex, 0), totalAesthetics - 1)
+        return aesthetics[index]
     }
 
-    public var canNavigateToGallery: Bool {
-        return totalAesthetics > 0 && getCurrentAesthetic() != nil
+    var nextAesthetic: AestheticModel? {
+        guard totalAesthetics > 1 else { return nil }
+        let index = (currentIndex + 1) % totalAesthetics
+        return aesthetics[index]
     }
 
-
-    // MARK: - Initializers
-    init() {
-        loadAesthetics()
+    var previousAesthetic: AestheticModel? {
+        guard totalAesthetics > 1 else { return nil }
+        let index = currentIndex == 0 ? totalAesthetics - 1 : currentIndex - 1
+        return aesthetics[index]
     }
 
+    private var modelContext: ModelContext?
 
-    // MARK: - Functions
-    func loadAesthetics() {
-        let descriptor = FetchDescriptor<AestheticModel>()
+    func configure(modelContext: ModelContext) {
+        self.modelContext = modelContext
+        reload()
+    }
+
+    func reload() {
+        guard let modelContext else { return }
 
         do {
-            let context = SwiftDataContainer.container.mainContext
-            let fetchedAesthetics = try context.fetch(descriptor)
-            self.aesthetics = fetchedAesthetics
+            let descriptor = FetchDescriptor<AestheticModel>(
+                sortBy: [SortDescriptor(\.name)]
+            )
+            aesthetics = try modelContext.fetch(descriptor)
+            if currentIndex >= aesthetics.count {
+                currentIndex = max(0, aesthetics.count - 1)
+            }
         } catch {
             print("Error fetching aesthetics: \(error)")
         }
     }
 
-    public func nextIndex() {
+    func nextIndex() {
         guard totalAesthetics > 0 else { return }
-
-        self.currentIndex = (currentIndex + 1) % totalAesthetics
+        currentIndex = (currentIndex + 1) % totalAesthetics
     }
 
-    public func previousIndex() {
+    func previousIndex() {
         guard totalAesthetics > 0 else { return }
-
-        if currentIndex == 0 {
-            self.currentIndex = totalAesthetics - 1
-            return
-        }
-
-        self.currentIndex = (currentIndex - 1)
-    }
-
-    public func getCurrentAesthetic() -> AestheticModel? {
-        guard totalAesthetics > 0 else { return nil }
-        return aesthetics[currentIndex]
-    }
-
-    public func getNextAesthetic() -> AestheticModel? {
-        guard totalAesthetics > 1 else { return nil }
-        let nextIndex = (currentIndex + 1) % totalAesthetics
-        return aesthetics[nextIndex]
+        currentIndex = currentIndex == 0 ? totalAesthetics - 1 : currentIndex - 1
     }
 }

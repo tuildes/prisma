@@ -17,7 +17,7 @@ final class AestheticModel: Identifiable {
     var imageDescription: String
 
     var totalReferences: Int {
-        return allReferences?.count ?? 0
+        allReferences?.count ?? 0
     }
 
     init(name: String, coverImage: Data, imageDescription: String) {

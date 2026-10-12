@@ -1,122 +1,116 @@
-import Combine
-import UIKit
+import Foundation
 import SwiftData
+import UIKit
 
-final class CreateImageViewModel: ObservableObject {
-
-    // MARK: - View Controllers actions
-    var onError: ((String, String) -> Void)?
-    var onSuccess: (() -> Void)?
-
-    // MARK: - Form Properties
-    @Published
+@Observable
+@MainActor
+final class CreateImageViewModel {
     var title: String = ""
-    @Published
     var author: String = ""
-    @Published
-    var sourceURL: String?
-    @Published
+    var sourceURL: String = ""
     var isLightMode: Bool = false
-    @Published
     var image: UIImage?
-    @Published
-    var selectedAestheticID: UUID?
-    @Published
     var imageDescription: String = ""
-
-    // MARK: - Data Source
-    @Published
+    var selectedAestheticID: UUID?
     var aesthetics: [AestheticModel] = []
+    var errorMessage: String?
+    var didSucceed = false
 
-    private var context: ModelContext = SwiftDataContainer.container.mainContext
+    private let preselectedAestheticID: UUID?
+    private var modelContext: ModelContext?
 
-    // MARK: - Actions
+    init(preselectedAestheticID: UUID? = nil) {
+        self.preselectedAestheticID = preselectedAestheticID
+        self.selectedAestheticID = preselectedAestheticID
+    }
+
+    func configure(modelContext: ModelContext) {
+        self.modelContext = modelContext
+        fetchAesthetics()
+    }
+
     func fetchAesthetics() {
-        do {
-            let descriptor = FetchDescriptor<AestheticModel>(sortBy: [SortDescriptor(\.name)])
-            aesthetics = try context.fetch(descriptor)
+        guard let modelContext else { return }
 
-            if let firstAesthetic = aesthetics.first {
-                selectedAestheticID = firstAesthetic.id
+        do {
+            let descriptor = FetchDescriptor<AestheticModel>(
+                sortBy: [SortDescriptor(\.name)]
+            )
+            aesthetics = try modelContext.fetch(descriptor)
+
+            if selectedAestheticID == nil {
+                selectedAestheticID = aesthetics.first?.id
             }
         } catch {
             print("Failed to fetch aesthetics: \(error)")
         }
     }
 
+    var selectedAestheticName: String {
+        aesthetics.first { $0.id == selectedAestheticID }?.name ?? "Select Aesthetic"
+    }
+
     func createImage() {
+        errorMessage = nil
+
         do {
-            try checkValidForm()
+            try validate()
         } catch {
-            onError?(NSLocalizedString("Form Error", comment: ""), error.localizedDescription)
+            errorMessage = error.localizedDescription
             return
         }
 
-        guard let image = image,
-            let imageData = convertImage(image: image)
+        guard let image,
+            let imageData = image.jpegData(compressionQuality: 0.8),
+            let modelContext,
+            let selectedAestheticID,
+            let aesthetic = aesthetics.first(where: { $0.id == selectedAestheticID })
         else {
+            errorMessage = FormError.invalidImage.localizedDescription
             return
         }
 
+        let trimmedURL = sourceURL.trimmingCharacters(in: .whitespacesAndNewlines)
         let newImage = ImageModel(
-            title: title,
-            author: author,
+            title: title.trimmingCharacters(in: .whitespacesAndNewlines),
+            author: author.trimmingCharacters(in: .whitespacesAndNewlines),
             image: imageData,
-            imageDescription: imageDescription,
-            sourceURL: sourceURL,
+            imageDescription: imageDescription.trimmingCharacters(in: .whitespacesAndNewlines),
+            sourceURL: trimmedURL.isEmpty ? nil : trimmedURL,
             isLightMode: isLightMode
         )
 
-        print("isLightMode: \(isLightMode)")
-
-        if let aestheticID = selectedAestheticID {
-            newImage.aesthetic = aesthetics.first { $0.id == aestheticID }
-        }
-
-        context.insert(newImage)
+        modelContext.insert(newImage)
+        // Keep every image already on this aesthetic. Assigning `image.aesthetic`
+        // replaces that collection and cascade-deletes the previous references.
+        var references = aesthetic.allReferences ?? []
+        references.append(newImage)
+        aesthetic.allReferences = references
 
         do {
-            try context.save()
-            print("Image saved successfully")
+            try modelContext.save()
+            didSucceed = true
         } catch {
-            print("Error saving image: \(error)")
+            print("Could not save image: \(error)")
+            errorMessage = "Could not save image."
         }
-
-        onSuccess?()
     }
 
-    func checkValidForm() throws {
-        guard !title.isEmpty else {
+    private func validate() throws {
+        guard !title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
             throw FormError.emptyField(fieldName: "Title")
         }
-
-        guard !author.isEmpty else {
+        guard !author.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
             throw FormError.emptyField(fieldName: "Author")
         }
-
         guard image != nil else {
             throw FormError.emptyField(fieldName: "Image")
         }
-
-        guard !imageDescription.isEmpty else {
+        guard !imageDescription.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
             throw FormError.emptyField(fieldName: "Image Description")
         }
-
         guard selectedAestheticID != nil else {
             throw FormError.emptyField(fieldName: "Aesthetic")
         }
-    }
-
-    private func convertImage(image: UIImage) -> Data? {
-        return image.jpegData(compressionQuality: 0.8)
-    }
-
-    func verifyUrl(urlString: String?) -> Bool {
-        if let urlString = urlString {
-            if let url = NSURL(string: urlString) {
-                return UIApplication.shared.canOpenURL(url as URL)
-            }
-        }
-        return false
     }
 }
