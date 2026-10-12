@@ -4,8 +4,6 @@
   <p align="center">Your references in Polaroids.</p>
 </p>
 
----
-
 ## Introduction
 
 **Prisma** is an iOS app for collecting visual references and organizing them into aesthetics. Each aesthetic lives as a polaroid on the home deck — swipe through moods, open a gallery, and keep every image close when inspiration hits.
