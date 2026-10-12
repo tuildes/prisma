@@ -67,7 +67,9 @@ struct HomeView: View {
 
     private var polaroidStack: some View {
         GeometryReader { proxy in
-            let cardWidth = proxy.size.width * 0.9
+            // Cap width here — a maxWidth inside PolaroidCard is overridden by
+            // the explicit `.frame(width:)` below.
+            let cardWidth = min(proxy.size.width * 0.9, 600)
 
             ZStack {
                 if let bottom = cardUnderneath {
@@ -99,7 +101,8 @@ struct HomeView: View {
         }
         .padding(.horizontal, 16)
         .aspectRatio(1 / 1.5, contentMode: .fit)
-        .frame(maxHeight: .infinity)
+        .frame(maxWidth: 600 + 32)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     private var cardUnderneath: AestheticModel? {

@@ -22,8 +22,6 @@ Create aesthetics with a cover photo, then add reference images with title, auth
     <img width="100%" src=".github/screenshots/home.png" alt="Home Screen"/>
 &nbsp;
     <img width="100%" src=".github/screenshots/image.png" alt="Image Screen"/>
-&nbsp;
-    <img width="100%" src=".github/screenshots/creation.png" alt="Creation Screen"/>
 </p>
 
 </details>
